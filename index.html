@@ -1993,24 +1993,49 @@
         restoreScrolls();
     }
 
-    function toggleTaskDone(kidId, taskId) {
+        function toggleTaskDone(kidId, taskId) {
         const task = appData.tasks.find(t => t.id === taskId);
         if (!task) return;
         if (!task.statusByKid) task.statusByKid = {};
+        if (!task.orderByKid) task.orderByKid = {};
+        if (!task.prevOrderByKid) task.prevOrderByKid = {};
 
         const newState = !task.statusByKid[kidId];
         task.statusByKid[kidId] = newState;
 
+        const kidTasks = getTasksForKid(kidId);
+        // Upewniamy się, że zadania mają ciągłą numerację indeksów (0, 1, 2...)
+        kidTasks.forEach((t, idx) => {
+            if (!t.orderByKid) t.orderByKid = {};
+            t.orderByKid[kidId] = idx;
+        });
+
+        const currentIndex = kidTasks.findIndex(t => t.id === taskId);
+
         if (newState) {
-            const kidTasks = getTasksForKid(kidId);
-            let maxOrder = 0;
-            kidTasks.forEach(t => {
-                if (t.id !== taskId && t.orderByKid && t.orderByKid[kidId] !== undefined) {
-                    if (t.orderByKid[kidId] > maxOrder) maxOrder = t.orderByKid[kidId];
-                }
+            // 1. Zapamiętujemy obecną pozycję zadania przed przeniesieniem na dół
+            task.prevOrderByKid[kidId] = currentIndex;
+
+            // 2. Przesuwamy zadanie na sam koniec listy, a pozostałym korygujemy indeksy
+            kidTasks.splice(currentIndex, 1);
+            kidTasks.push(task);
+            kidTasks.forEach((t, idx) => {
+                t.orderByKid[kidId] = idx;
             });
-            if (!task.orderByKid) task.orderByKid = {};
-            task.orderByKid[kidId] = maxOrder + 1;
+        } else {
+            // 3. Przywracamy zadanie na zapamiętaną pozycję po usunięciu odklikania
+            if (task.prevOrderByKid[kidId] !== undefined) {
+                let targetIdx = task.prevOrderByKid[kidId];
+                kidTasks.splice(currentIndex, 1);
+                if (targetIdx < 0) targetIdx = 0;
+                if (targetIdx > kidTasks.length) targetIdx = kidTasks.length;
+                kidTasks.splice(targetIdx, 0, task);
+
+                kidTasks.forEach((t, idx) => {
+                    t.orderByKid[kidId] = idx;
+                });
+                delete task.prevOrderByKid[kidId];
+            }
         }
 
         saveData();
@@ -2031,6 +2056,7 @@
 
         renderKidsBoard();
     }
+
 
     function toggleRewardDone(kidId, rewardId) {
         const rew = (appData.rewards || []).find(r => r.id === rewardId);
@@ -2149,13 +2175,23 @@
         if (listEl) listEl.scrollTop = listEl.scrollHeight;
     }
 
-    function resetAllProgress() {
+        function resetAllProgress() {
         if (!confirm('Rozpocząć Nowy Dzień i odznaczyć wszystkie wykonane zadania oraz odebrane nagrody?')) return;
-        appData.tasks.forEach(t => t.statusByKid = {});
+        appData.tasks.forEach(t => {
+            t.statusByKid = {};
+            if (t.prevOrderByKid) {
+                Object.keys(t.prevOrderByKid).forEach(kId => {
+                    if (!t.orderByKid) t.orderByKid = {};
+                    t.orderByKid[kId] = t.prevOrderByKid[kId];
+                });
+                t.prevOrderByKid = {};
+            }
+        });
         (appData.rewards || []).forEach(r => r.statusByKid = {});
         saveData();
         renderKidsBoard();
-    }
+        }
+
 
     // ================= MODAL PEŁNEJ BIBLIOTEKI OBRAZKÓW (+) =================
     function openEmojiLibrary(target) {
