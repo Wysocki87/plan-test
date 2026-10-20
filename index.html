@@ -801,6 +801,66 @@
             color: var(--text-muted);
             margin: 10px 0 6px 0;
         }
+
+        /* AUTOUZUPEŁNIANIE (PODPOWIEDZI ZADAŃ I NAGRÓD) */
+        .autocomplete-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 180px;
+            display: flex;
+        }
+
+        .autocomplete-wrapper .input-text {
+            width: 100%;
+        }
+
+        .autocomplete-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.16);
+            max-height: 230px;
+            overflow-y: auto;
+            z-index: 1200;
+            display: none;
+            flex-direction: column;
+        }
+
+        .autocomplete-dropdown.open {
+            display: flex;
+        }
+
+        .autocomplete-item {
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            border-bottom: 1px solid #f1f2f6;
+            transition: background 0.12s;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.active {
+            background: #f3f0ff;
+            color: var(--primary);
+        }
+
+        .autocomplete-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
@@ -814,16 +874,16 @@
             </span>
         </div>
         <div class="nav-buttons">
-            <button class="btn btn-outline" id="layoutToggleBtn" onclick="toggleBoardLayout()" title="Ustawienie lokalne dla tego urządzenia">📐 Układ: Obok siebie</button>
+            <button type="button" class="btn btn-outline" id="layoutToggleBtn" onclick="toggleBoardLayout()" title="Ustawienie lokalne dla tego urządzenia">📐 Układ: Obok siebie</button>
             <div class="global-zoom-box" title="Skala lokalna dla tego urządzenia (nie synchronizuje się)">
                 <span style="font-size:0.78rem; font-weight:800; padding:0 6px;">Skala (40-120%):</span>
                 <button type="button" onclick="changeGlobalScale(-0.1)">🔍-</button>
                 <button type="button" id="globalScaleLabel" onclick="resetGlobalScale()">100%</button>
                 <button type="button" onclick="changeGlobalScale(0.1)">🔍+</button>
             </div>
-            <button class="btn btn-outline" type="button" onclick="toggleFullScreen()">⛶ Pełny ekran</button>
-            <button class="btn btn-success" type="button" onclick="resetAllProgress()">🔄 Nowy Dzień</button>
-            <button class="btn btn-primary" type="button" id="toggleViewBtn" onclick="handleViewSwitch()">🔒 Panel Rodzica</button>
+            <button type="button" class="btn btn-outline" onclick="toggleFullScreen()">⛶ Pełny ekran</button>
+            <button type="button" class="btn btn-success" onclick="resetAllProgress()">🔄 Nowy Dzień</button>
+            <button type="button" class="btn btn-primary" id="toggleViewBtn" onclick="handleViewSwitch()">🔒 Panel Rodzica</button>
         </div>
     </div>
 
@@ -1143,20 +1203,32 @@
     const REWARD_EMOJIS = ['🍦', '🎮', '🚲', '🍿', '🧸', '🏆', '⭐', '🎁', '🎨', '⚽', '🍕', '🎉'];
 
     const ALL_EMOJIS_CATALOG = {
-        "👧 Dzieci, Postacie i Bohaterowie": [
-            '👦','👧','🧒','👶','🦸‍♂️','🦸‍♀️','🧙‍♂️','🧚‍♀️','🧜‍♀️','🤴','👸','🥷','🧑‍🚀','🧑‍🚒','👮','🕵️','🤠','🏴‍☠️','🤖','👽','👻','⛄','😇','😎','🥳','🤩'
+        "👧 Dzieci, Postacie i Emocje": [
+            '👦','👧','🧒','👶','🦸‍♂️','🦸‍♀️','🧙‍♂️','🧙‍♀️','🧚‍♀️','🧚‍♂️','🧜‍♀️','🧜‍♂️','🤴','👸','🥷','🧑‍🚀','🧑‍🚒','👮','🕵️','🤠','🏴‍☠️','🤖','👽','👻','⛄','🎅','🤶','🧝‍♂️','🧝‍♀️','🧛‍♂️','🧟‍♂️','🧞‍♂️','🧑‍🎓','🧑‍🏫','🧑‍⚕️','🧑‍🍳','🧑‍🌾','🧑‍🔧','🧑‍🎨','🧑‍✈️','👑','😇','😎','🥳','🤩','😀','😃','😄','😁','😆','😅','😂','🤣','😊','🥹','🙂','🙃','😉','😌','😍','🥰','😘','🤪','🤓'
         ],
-        "🐶 Zwierzęta i Przyroda": [
-            '🐶','🐱','🦊','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🦄','🦖','🦕','🐢','🐙','🐬','🐳','🦈','🦋','🐝','🐞','🦉','🐧','🐤','🐹','🐰','🐻','🐎','🦜','🦩','🦔','🐿️','🌈','☀️','🌅','🌇','🌙','⭐','🌸','🌻','🍀','🌵'
+        "🧹 Dom i Porządki": [
+            '🛏️','🧹','🌪️','🍽️','🧽','🗑️','♻️','🐠','🐟','🧺','👕','🪴','🪣','🪠','🛋️','🪑','🚪','🪟','🪞','🛎️','🖼️','🔑','🗝️','📦','⏰','⏳','⌚','📅','📆','💡','🔦','🕯️','🔌','🔋','🧰','🛠️','🔧','🔨','🪛','🪚','🧱','🪜','🧲','🧯','🛒','🛍️'
         ],
-        "📚 Szkoła, Nauka i Domowe Obowiązki": [
-            '📚','📖','📝','✏️','🖊️','📐','📏','🎒','💻','🖥️','🔬','🔭','🌍','🇬🇧','🇩🇪','🇪🇸','🧮','🛏️','🪥','🧼','🚿','🛁','👕','👖','🧦','👟','🧹','🧺','🧽','🗑️','🍽️','🥣','🥛','🪴','⏰','📅','🔑'
+        "🧼 Higiena, Zdrowie i Ubranie": [
+            '🪥','🦷','🧼','🫧','🚿','🛁','🪮','💇‍♀️','💇‍♂️','🧴','🧖‍♀️','🧖‍♂️','🪒','🧻','🚽','💅','💄','💊','🩹','🩺','🌡️','🩻','🩼','👕','👖','🧦','👟','👞','🥿','🥾','🩴','👗','👘','🧥','🧣','🧤','🧢','👒','🎩','👓','🕶️','☂️','🎒','👜','👛','🧷','🪡','🧵','🧶'
         ],
-        "⚽ Sport, Muzyka i Hobby": [
-            '⚽','🏀','🏐','🎾','🏸','🏓','🥋','🥊','🏊','🚴','🛴','🛹','⛸️','🎿','🏇','🧘','🤸','🎨','🎭','🎬','🎤','🎧','🎹','🎸','🥁','🎺','🎻','🎲','♟️','🧩','🎯','🎳','🪁','🎣','🏕️'
+        "📚 Szkoła, Nauka i Czas": [
+            '📚','📖','📗','📘','📙','📓','📔','📒','📝','✏️','🖊️','🖋️','✒️','🖌️','🖍️','📐','📏','📎','🖇️','📌','📍','✂️','🗂️','📁','📂','🗃️','📋','📊','📈','📉','💻','🖥️','🖨️','⌨️','🖱️','📱','🧮','🔬','🔭','🧬','🧪','🧫','⚗️','🌍','🌎','🌏','🌐','🗺️','🧭','🏫','🔔','🎓','🏆','🥇','🥈','🥉','🏅','🎖️','📜','🇬🇧','🇩🇪','🇪🇸','🇫🇷','🇮🇹','🇵🇱','🇺🇦','🇺🇸','🇯🇵','🇨🇳'
         ],
-        "🍦 Nagrody, Słodycze i Rozrywka": [
-            '🍦','🍧','🍨','🍩','🍪','🎂','🧁','🍰','🍫','🍬','🍭','🍮','🍯','🍕','🍔','🍟','🌭','🍿','🧇','🥞','🍓','🍒','🍉','🍎','🍌','🍇','🎮','🕹️','📱','📺','🎟️','🎪','🎢','🎡','🎠','🏖️','✈️','🚀','🛸','🧸','🪄','🎀','🎁','🎈','🎉','🎊','🏆','🥇','🎖️','👑','💎','💰','💵'
+        "🍽️ Jedzenie, Napoje i Posiłki": [
+            '🍽️','🥣','🥄','🍴','🥢','🔪','🏺','🍳','🥞','🧇','🥓','🥩','🍗','🍖','🌭','🍔','🍟','🍕','🫓','🥪','🥙','🧆','🌮','🌯','🫔','🥗','🥘','🫕','🥫','🍝','🍜','🍲','🍛','🍣','🍱','🥟','🍤','🍙','🍚','🍘','🍥','🥠','🍢','🥐','🥯','🍞','🥖','🥨','🧀','🥚','🧈','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🥦','🥬','🥒','🌶️','🫑','🌽','🥕','🫒','🧄','🧅','🥔','🍠','🥜','🫘','🌰','🍯','🥛','🧃','🫖','☕','🍵','🥤','🧋','🧊','💧'
+        ],
+        "🐶 Zwierzęta, Pupil i Przyroda": [
+            '🐶','🐕','🦮','🐕‍🦺','🐩','🐾','🦴','🐱','🐈','🐈‍⬛','🐠','🐟','🐡','🦊','🐼','🐨','🐯','🦁','🐮','🐷','🐽','🐸','🐵','🙈','🙉','🙊','🦄','🐴','🏇','🦓','🦌','🦬','🐂','🐃','🐄','🐏','🐑','🐐','🐪','🐫','🦙','🦒','🐘','🦣','🦏','🦛','🐭','🐁','🐀','🐹','🐰','🐇','🐿️','🦫','🦔','🦇','🐻','🐻‍❄️','🦥','🦦','🦨','🦘','🦡','🦃','🐔','🐓','🐣','🐤','🐥','🐦','🐧','🕊️','🦅','🦆','🦢','🦉','🦤','🪶','🦩','🦚','🦜','🐢','🐊','🐍','🦎','🦖','🦕','🐙','🦑','🦐','🦞','🦀','🐬','🐳','🐋','🦈','🦋','🐛','🐜','🐝','🪲','🐞','🦗','🕷️','🕸️','🦂','🐌','🪱'
+        ],
+        "🌸 Rośliny, Pogoda i Pory Dnia": [
+            '☀️','🌅','🌄','🌇','🌆','🌃','🌌','🌙','🌛','🌜','🌝','🌞','⭐','🌟','🌠','☁️','⛅','⛈️','🌤️','🌥️','🌦️','🌧️','🌨️','🌩️','🌪️','🌫️','🌬️','🌈','❄️','☃️','⚡','🔥','🌊','🌸','💮','🏵️','🌹','🥀','🌺','🌻','🌼','🌷','🌱','🪴','🌲','🌳','🌴','🌵','🌾','🌿','☘️','🍀','🍁','🍂','🍃','🍄','🐚','🪨'
+        ],
+        "⚽ Sport, Muzyka, Gry i Hobby": [
+            '⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🪀','🏓','🏸','🏒','🏑','🥍','🏏','🪃','🥅','⛳','🪁','🏹','🎣','🤿','🥊','🥋','🎽','🛹','🛼','🛷','⛸️','🥌','🎿','⛷️','🏂','🪂','🏋️','🤼','🤸','⛹️','🤺','🤾','🏌️','🧘','🏄','🏊','🤽','🚣','🧗','🚵','🚴','🎨','🎭','🎪','🎤','🎧','🎼','🎹','🥁','🪘','🎷','🎺','🪗','🎸','🪕','🎻','🎬','🎯','🎳','🎮','🕹️','🎲','🧩','♟️','🃏','🀄','🎴','🪄','📷','📸','📹','🎥'
+        ],
+        "🍦 Nagrody, Słodycze, Wyjścia i Podróże": [
+            '🍦','🍧','🍨','🍩','🍪','🎂','🍰','🧁','🥧','🍫','🍬','🍭','🍮','🍿','🎁','🎀','🎈','🎉','🎊','🪅','🪩','🧸','🪆','💎','💰','💵','🪙','💳','🛍️','🛒','🎟️','🎫','🎢','🎡','🎠','🛝','🏖️','🏝️','🏜️','🌋','⛰️','🏔️','🗻','🏕️','⛺','🛖','🏠','🏡','🏰','🏯','🏟️','⛲','🗽','🗼','🚗','🚕','🚙','🚌','🚎','🏎️','🚓','🚑','🚒','🚐','🛻','🚚','🚛','🚜','🏍️','🛵','🚲','🛴','🚏','🛣️','🛤️','⛽','🚨','🚥','🚦','🛑','🚧','⚓','⛵','🛶','🚤','🛳️','⛴️','🛥️','🚢','✈️','🛩️','🛫','🛬','🚁','🚟','🚠','🚡','🛰️','🚀','🛸'
         ]
     };
 
@@ -1240,7 +1312,6 @@
         ]
     };
 
-    // ================= AUTOMATYCZNA SANITYZACJA DANYCH (NAPRAWA STARYCH STRUKTUR Z FIREBASE / LOCALSTORAGE) =================
     function sanitizeAppData(data) {
         if (!data || typeof data !== 'object') {
             return JSON.parse(JSON.stringify(DEFAULT_STATE));
@@ -1248,7 +1319,6 @@
         if (data.updatedAt === undefined) data.updatedAt = 0;
         if (typeof data.pin !== 'string') data.pin = '1234';
 
-        // Firebase potrafi zamienić obiekty z kluczami numerycznymi lub puste węzły na obiekty/null zamiast tablic
         const toArray = (val, fallback) => {
             if (Array.isArray(val)) return val.filter(Boolean);
             if (val && typeof val === 'object') return Object.values(val).filter(Boolean);
@@ -1305,7 +1375,6 @@
         return data;
     }
 
-    // ================= LOKALNE USTAWIENIA URZĄDZENIA (NIE SYNCHRONIZOWANE Z CHMURĄ) =================
     let localDeviceSettings = loadLocalDeviceSettings();
 
     function loadLocalDeviceSettings() {
@@ -1414,7 +1483,6 @@
         }
     }
 
-    // ================= AUTORYZACJA FIREBASE AUTH (EMAIL/PASSWORD + REFRESH TOKEN) =================
     async function signInWithFirebaseEmail(apiKey, email, password) {
         const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${encodeURIComponent(apiKey)}`;
         const res = await fetch(url, {
@@ -1606,7 +1674,6 @@
         }
     }, 3000);
 
-    // ================= SKALOWANIE GLOBALNE I UKŁAD (LOKALNIE NA URZĄDZENIU) =================
     function applyGlobalScale() {
         let scale = Number(localDeviceSettings.globalScale) || 1;
         if (scale < 0.4) scale = 0.4;
@@ -1665,11 +1732,10 @@
         }
     }
 
-    // ================= ODLICZANIE CZASU DO GODZINY WYKONANIA ORAZ KOLORY SPÓŹNIENIA =================
     function getLateHexColor(lateSec) {
         if (!lateSec || lateSec <= 0) return null;
-        const minSec = 3 * 60;  // do 3 minut = #FFFF00
-        const maxSec = 15 * 60; // 15 minut i więcej = #FF0000
+        const minSec = 3 * 60;
+        const maxSec = 15 * 60;
         if (lateSec <= minSec) return '#FFFF00';
         if (lateSec >= maxSec) return '#FF0000';
         const ratio = (lateSec - minSec) / (maxSec - minSec);
@@ -2031,7 +2097,6 @@
                 </div>
             `;
 
-            // Renderowanie nagród bez ryzyka zepsucia cudzysłowów w HTML
             const rewardsPlaceholder = col.querySelector('.rewards-placeholder');
             if (kidRewards.length > 0) {
                 const rewSec = document.createElement('div');
@@ -2071,7 +2136,6 @@
                 scrollPositions['task_' + kid.id] = listEl.scrollTop;
             });
 
-            // Grupowanie zadań według sekcji na tablicy dziecka
             const sections = appData.sections || [];
             const validSectionIds = new Set(sections.map(s => s.id));
 
@@ -2109,7 +2173,6 @@
                 listEl.appendChild(groupEl);
             });
 
-            // Zadania bez sekcji
             const uncategorizedTasks = kidTasks.filter(t => !t.sectionId || !validSectionIds.has(t.sectionId));
             if (uncategorizedTasks.length > 0) {
                 if (sections.length > 0 && kidTasks.length > uncategorizedTasks.length) {
@@ -2152,6 +2215,7 @@
         });
 
         restoreScrolls();
+        setupAllAutocompletes();
     }
 
     function toggleTaskDone(kidId, taskId) {
@@ -2255,7 +2319,6 @@
         renderKidsBoard();
     }
 
-    // SKALOWANIE TABLIC DZIECI (LOKALNE NA URZĄDZENIU: 40% - 200%)
     function changeKidZoom(kidId, delta) {
         const current = getKidLocalZoom(kidId);
         let next = Math.round((current + delta) * 100) / 100;
@@ -2379,7 +2442,6 @@
         renderKidsBoard();
     }
 
-    // ================= MODAL PEŁNEJ BIBLIOTEKI OBRAZKÓW (+) =================
     function openEmojiLibrary(target) {
         emojiPickerTarget = target;
         const container = document.getElementById('emojiLibraryContent');
@@ -2439,7 +2501,6 @@
         closeEmojiLibrary();
     }
 
-    // ================= PANEL RODZICA =================
     function handleViewSwitch() {
         if (!isParentMode) {
             if (appData.pin && appData.pin.trim() !== '') {
@@ -2559,9 +2620,9 @@
         renderAdminRewardsList();
         renderPresets();
         renderRewardPresets();
+        setupAllAutocompletes();
     }
 
-    // ================= ZARZĄDZANIE SEKCJAMI (KATEGORIAMI) ZADAŃ =================
     function renderAdminSectionsList() {
         const container = document.getElementById('adminSectionsList');
         if (!container) return;
@@ -3080,7 +3141,6 @@
         renderAdminRewardsList();
     }
 
-    // ================= SCHEMATY ZADAŃ =================
     function renderPresets() {
         const container = document.getElementById('presetsList');
         if (!container) return;
@@ -3301,7 +3361,6 @@
         document.getElementById('editPresetModal').style.display = 'none';
     }
 
-    // ================= SCHEMATY NAGRÓD =================
     function renderRewardPresets() {
         const container = document.getElementById('rewardPresetsList');
         if (!container) return;
@@ -3512,6 +3571,317 @@
         appData.pin = document.getElementById('newPinInput').value.trim();
         saveData();
         alert('Zapisano ustawienia kodu PIN!');
+    }
+
+    // ================= INTELIGENTNE PODPOWIADANIE ZADAŃ I NAGRÓD =================
+    const BUILTIN_TASK_SUGGESTIONS = [
+        { icon: '🛏️', title: 'Pościelić łóżko i przewietrzyć pokój' },
+        { icon: '🛏️', title: 'Pościelić łóżko' },
+        { icon: '🪥', title: 'Umyć zęby i ubrać się do szkoły' },
+        { icon: '🪥', title: 'Umyć zęby rano' },
+        { icon: '🪥', title: 'Umyć zęby wieczorem' },
+        { icon: '🧼', title: 'Umyć ręce po powrocie do domu' },
+        { icon: '🚿', title: 'Wziąć prysznic / Wykąpać się' },
+        { icon: '🪮', title: 'Uczesać włosy' },
+        { icon: '🧴', title: 'Posmarować ciało kremem' },
+        { icon: '👕', title: 'Przygotować ubrania na jutro' },
+        { icon: '👕', title: 'Włożyć brudne ubrania do kosza na pranie' },
+        { icon: '📚', title: 'Odrobić pracę domową' },
+        { icon: '📚', title: 'Odrobić lekcje z matematyki' },
+        { icon: '📚', title: 'Odrobić lekcje z języka polskiego' },
+        { icon: '🇬🇧', title: 'Powtórzyć słówka z języka angielskiego' },
+        { icon: '📖', title: 'Poczytać książkę przez 15 minut' },
+        { icon: '📖', title: 'Poczytać lekturę szkolną' },
+        { icon: '🎒', title: 'Spakować plecak na jutro' },
+        { icon: '🍱', title: 'Spakować drugie śniadanie i bidon z wodą' },
+        { icon: '🧹', title: 'Posprzątać swój pokój i biurko' },
+        { icon: '🧹', title: 'Odkurzyć swój pokój' },
+        { icon: '🧸', title: 'Poukladać zabawki i klocki na półce' },
+        { icon: '🍽️', title: 'Wstawić naczynia do zmywarki' },
+        { icon: '🍽️', title: 'Opróżnić zmywarkę' },
+        { icon: '🍽️', title: 'Nakryć do stołu przed obiadem' },
+        { icon: '🍽️', title: 'Sprzątnąć ze stołu po posiłku' },
+        { icon: '🗑️', title: 'Wynieść worek ze śmieciami' },
+        { icon: '🪴', title: 'Podlać kwiatki w pokoju' },
+        { icon: '🐕', title: 'Nakarmić psa i nalać świeżej wody' },
+        { icon: '🐕', title: 'Wyprowadzić psa na spacer' },
+        { icon: '🐱', title: 'Nakarmić kota i wyczyścić kuwetę' },
+        { icon: '🐠', title: 'Nakarmić rybki w akwarium' },
+        { icon: '⚽', title: 'Spakować strój na WF / trening' },
+        { icon: '🎹', title: 'Poćwiczyć grę na instrumencie' },
+        { icon: '💊', title: 'Wziąć witaminy' }
+    ];
+
+    const BUILTIN_REWARD_SUGGESTIONS = [
+        { icon: '🎮', title: '30 minut ulubionej gry lub bajki' },
+        { icon: '🎮', title: '1 godzina grania na konsoli / komputerze' },
+        { icon: '📺', title: 'Obejrzenie odcinka ulubionej bajki' },
+        { icon: '🍿', title: 'Wspólny wieczór filmowy z popcornem' },
+        { icon: '🍦', title: 'Wyjście na lody lub deser' },
+        { icon: '🍫', title: 'Słodka przekąska po obiedzie' },
+        { icon: '🍕', title: 'Domowa pizza na kolację' },
+        { icon: '🥞', title: 'Naleśniki lub gofry z owocami' },
+        { icon: '🚲', title: 'Wspólna wycieczka rowerowa' },
+        { icon: '🛝', title: 'Wyjście na plac zabaw lub salę zabaw' },
+        { icon: '🏊', title: 'Wyjście na basen / aquapark' },
+        { icon: '🎲', title: 'Wspólna gra w ulubioną grę planszową' },
+        { icon: '🧩', title: 'Układanie klocków LEGO razem z rodzicem' },
+        { icon: '🎟️', title: 'Wyjście do kina na wybrany film' },
+        { icon: '📖', title: 'Dłuższe czytanie przed snem ( +15 minut )' },
+        { icon: '🌙', title: 'Pójście spać 30 minut później w weekend' },
+        { icon: '🪙', title: 'Dodatkowe kieszonkowe do skarbonki' },
+        { icon: '🎁', title: 'Mała niespodzianka / naklejki' }
+    ];
+
+    function normalizePl(str) {
+        return (str || '')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/ł/g, 'l')
+            .trim();
+    }
+
+    function collectSuggestionsPool(type) {
+        const map = new Map();
+        const add = (icon, title) => {
+            if (!title || typeof title !== 'string') return;
+            const clean = title.trim();
+            if (!clean) return;
+            const key = normalizePl(clean);
+            if (!map.has(key)) {
+                map.set(key, { icon: icon || (type === 'reward' ? '🎁' : '📌'), title: clean });
+            }
+        };
+
+        if (type === 'task') {
+            (appData.tasks || []).forEach(t => add(t.icon, t.title));
+            (appData.presets || []).forEach(p => (p.tasks || []).forEach(pt => add(pt.icon, pt.title)));
+            BUILTIN_TASK_SUGGESTIONS.forEach(item => add(item.icon, item.title));
+        } else {
+            (appData.rewards || []).forEach(r => add(r.icon, r.title));
+            (appData.rewardPresets || []).forEach(rp => (rp.rewards || []).forEach(pr => add(pr.icon, pr.title)));
+            BUILTIN_REWARD_SUGGESTIONS.forEach(item => add(item.icon, item.title));
+        }
+        return Array.from(map.values());
+    }
+
+    function scoreSuggestionMatch(candidateTitle, queryRaw) {
+        const q = queryRaw.trim().toLowerCase();
+        const qNorm = normalizePl(queryRaw);
+        if (!qNorm) return 0;
+
+        const t = candidateTitle.toLowerCase();
+        const tNorm = normalizePl(candidateTitle);
+
+        if (t === q) return 0;
+
+        let score = 0;
+
+        if (t.startsWith(q)) {
+            score += 1000;
+        } else if (tNorm.startsWith(qNorm)) {
+            score += 900;
+        }
+
+        const wordsNorm = tNorm.split(/\s+/);
+        const wordsExact = t.split(/\s+/);
+        if (wordsExact.some(w => w.startsWith(q))) {
+            score += 650;
+        } else if (wordsNorm.some(w => w.startsWith(qNorm))) {
+            score += 600;
+        }
+
+        const idxNorm = tNorm.indexOf(qNorm);
+        if (idxNorm !== -1) {
+            score += Math.max(300 - idxNorm * 3, 120);
+        }
+
+        const queryTokens = qNorm.split(/\s+/).filter(Boolean);
+        if (queryTokens.length > 1) {
+            let matchedTokens = 0;
+            queryTokens.forEach(tok => {
+                if (wordsNorm.some(w => w.startsWith(tok))) {
+                    score += 180;
+                    matchedTokens++;
+                } else if (tNorm.includes(tok)) {
+                    score += 100;
+                    matchedTokens++;
+                }
+            });
+            if (matchedTokens === queryTokens.length) {
+                score += 250;
+            }
+        }
+
+        if (score > 0) {
+            score -= Math.min(candidateTitle.length * 0.4, 40);
+        }
+
+        return score;
+    }
+
+    function getSortedSuggestions(type, query) {
+        if (!query || !query.trim()) return [];
+        const pool = collectSuggestionsPool(type);
+        return pool
+            .map(item => ({ ...item, score: scoreSuggestionMatch(item.title, query) }))
+            .filter(item => item.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 7);
+    }
+
+    function attachAutocompleteToInput(inputId, type, onIconSelect) {
+        const inputEl = document.getElementById(inputId);
+        if (!inputEl || inputEl.dataset.autocompleteBound === 'true') return;
+        inputEl.dataset.autocompleteBound = 'true';
+        inputEl.setAttribute('autocomplete', 'off');
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'autocomplete-wrapper';
+        if (inputEl.style.flex) wrapper.style.flex = inputEl.style.flex;
+        if (inputEl.style.minWidth) wrapper.style.minWidth = inputEl.style.minWidth;
+
+        inputEl.parentNode.insertBefore(wrapper, inputEl);
+        wrapper.appendChild(inputEl);
+
+        const dropdown = document.createElement('div');
+        dropdown.className = 'autocomplete-dropdown';
+        wrapper.appendChild(dropdown);
+
+        let currentItems = [];
+        let activeIndex = -1;
+
+        const closeDropdown = () => {
+            dropdown.classList.remove('open');
+            dropdown.innerHTML = '';
+            currentItems = [];
+            activeIndex = -1;
+        };
+
+        const applySuggestion = (item) => {
+            inputEl.value = item.title;
+            if (typeof onIconSelect === 'function' && item.icon) {
+                onIconSelect(item.icon);
+            }
+            closeDropdown();
+            inputEl.focus();
+        };
+
+        const renderSuggestions = () => {
+            const val = inputEl.value;
+            currentItems = getSortedSuggestions(type, val);
+            activeIndex = -1;
+
+            if (currentItems.length === 0) {
+                closeDropdown();
+                return;
+            }
+
+            dropdown.innerHTML = '';
+            currentItems.forEach((item) => {
+                const row = document.createElement('div');
+                row.className = 'autocomplete-item';
+
+                const iconSpan = document.createElement('span');
+                iconSpan.className = 'autocomplete-icon';
+                iconSpan.textContent = item.icon;
+
+                const textSpan = document.createElement('span');
+                textSpan.textContent = item.title;
+
+                row.appendChild(iconSpan);
+                row.appendChild(textSpan);
+
+                row.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    applySuggestion(item);
+                });
+
+                dropdown.appendChild(row);
+            });
+
+            dropdown.classList.add('open');
+        };
+
+        inputEl.addEventListener('input', renderSuggestions);
+        inputEl.addEventListener('focus', renderSuggestions);
+        inputEl.addEventListener('blur', () => setTimeout(closeDropdown, 150));
+
+        inputEl.addEventListener('keydown', (e) => {
+            if (!dropdown.classList.contains('open') || currentItems.length === 0) return;
+            const rows = dropdown.querySelectorAll('.autocomplete-item');
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = (activeIndex + 1) % currentItems.length;
+                rows.forEach((r, i) => r.classList.toggle('active', i === activeIndex));
+                if (rows[activeIndex]) rows[activeIndex].scrollIntoView({ block: 'nearest' });
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = (activeIndex - 1 + currentItems.length) % currentItems.length;
+                rows.forEach((r, i) => r.classList.toggle('active', i === activeIndex));
+                if (rows[activeIndex]) rows[activeIndex].scrollIntoView({ block: 'nearest' });
+            } else if (e.key === 'Enter' && activeIndex >= 0) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                applySuggestion(currentItems[activeIndex]);
+            } else if (e.key === 'Escape') {
+                closeDropdown();
+            }
+        });
+    }
+
+    function setupAllAutocompletes() {
+        attachAutocompleteToInput('newTaskText', 'task', (icon) => {
+            selectedEmoji = icon;
+            if (!EMOJIS.includes(icon)) EMOJIS.unshift(icon);
+            const picker = document.getElementById('emojiPicker');
+            if (picker) {
+                Array.from(picker.querySelectorAll('.emoji-option')).forEach(el => {
+                    el.classList.toggle('selected', el.textContent === icon);
+                });
+            }
+        });
+
+        attachAutocompleteToInput('editTaskTitle', 'task', (icon) => {
+            const el = document.getElementById('editTaskIcon');
+            if (el) el.value = icon;
+        });
+
+        attachAutocompleteToInput('presetNewTaskTitle', 'task', (icon) => {
+            const el = document.getElementById('presetNewTaskIcon');
+            if (el) el.value = icon;
+        });
+
+        attachAutocompleteToInput('newRewardText', 'reward', (icon) => {
+            selectedRewardEmoji = icon;
+            if (!REWARD_EMOJIS.includes(icon)) REWARD_EMOJIS.unshift(icon);
+            const picker = document.getElementById('rewardEmojiPicker');
+            if (picker) {
+                Array.from(picker.querySelectorAll('.emoji-option')).forEach(el => {
+                    el.classList.toggle('selected', el.textContent === icon);
+                });
+            }
+        });
+
+        attachAutocompleteToInput('editRewardTitle', 'reward', (icon) => {
+            const el = document.getElementById('editRewardIcon');
+            if (el) el.value = icon;
+        });
+
+        attachAutocompleteToInput('rewardPresetNewTitle', 'reward', (icon) => {
+            const el = document.getElementById('rewardPresetNewIcon');
+            if (el) el.value = icon;
+        });
+
+        (appData.kids || []).forEach(kid => {
+            attachAutocompleteToInput(`kidInput_${kid.id}`, 'task', (icon) => {
+                kidSelectedEmoji[kid.id] = icon;
+                const el = document.getElementById(`kidEmoji_${kid.id}`);
+                if (el) el.value = icon;
+            });
+        });
     }
 
     // START APLIKACJI
