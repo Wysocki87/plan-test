@@ -817,13 +817,13 @@
             <button class="btn btn-outline" id="layoutToggleBtn" onclick="toggleBoardLayout()" title="Ustawienie lokalne dla tego urządzenia">📐 Układ: Obok siebie</button>
             <div class="global-zoom-box" title="Skala lokalna dla tego urządzenia (nie synchronizuje się)">
                 <span style="font-size:0.78rem; font-weight:800; padding:0 6px;">Skala (40-120%):</span>
-                <button onclick="changeGlobalScale(-0.1)">🔍-</button>
-                <button id="globalScaleLabel" onclick="resetGlobalScale()">100%</button>
-                <button onclick="changeGlobalScale(0.1)">🔍+</button>
+                <button type="button" onclick="changeGlobalScale(-0.1)">🔍-</button>
+                <button type="button" id="globalScaleLabel" onclick="resetGlobalScale()">100%</button>
+                <button type="button" onclick="changeGlobalScale(0.1)">🔍+</button>
             </div>
-            <button class="btn btn-outline" onclick="toggleFullScreen()">⛶ Pełny ekran</button>
-            <button class="btn btn-success" onclick="resetAllProgress()">🔄 Nowy Dzień</button>
-            <button class="btn btn-primary" id="toggleViewBtn" onclick="handleViewSwitch()">🔒 Panel Rodzica</button>
+            <button class="btn btn-outline" type="button" onclick="toggleFullScreen()">⛶ Pełny ekran</button>
+            <button class="btn btn-success" type="button" onclick="resetAllProgress()">🔄 Nowy Dzień</button>
+            <button class="btn btn-primary" type="button" id="toggleViewBtn" onclick="handleViewSwitch()">🔒 Panel Rodzica</button>
         </div>
     </div>
 
@@ -850,9 +850,9 @@
                 <input type="password" id="cloudPasswordInput" class="input-text" style="flex:1; min-width:140px;" placeholder="Hasło do bazy">
             </div>
             <div class="form-row">
-                <button class="btn btn-primary" onclick="saveCloudConfig()">🔗 Zaloguj, połącz i pobierz z bazy</button>
-                <button class="btn btn-warning" onclick="pushToCloud()">⬆️ Wyślij obecny stan do bazy</button>
-                <button class="btn btn-outline" onclick="logoutCloudSession()">🚪 Wyloguj z chmury</button>
+                <button type="button" class="btn btn-primary" onclick="saveCloudConfig()">🔗 Zaloguj, połącz i pobierz z bazy</button>
+                <button type="button" class="btn btn-warning" onclick="pushToCloud()">⬆️ Wyślij obecny stan do bazy</button>
+                <button type="button" class="btn btn-outline" onclick="logoutCloudSession()">🚪 Wyloguj z chmury</button>
             </div>
             <div id="cloudHelpText" style="font-size:0.82rem; color:#0984e3; font-weight:700;"></div>
         </div>
@@ -886,7 +886,7 @@
                     <option value="#d63031">🔴 Czerwony</option>
                     <option value="#fdcb6e">🟡 Złoty</option>
                 </select>
-                <button class="btn btn-primary" onclick="addKid()">➕ Dodaj dziecko</button>
+                <button type="button" class="btn btn-primary" onclick="addKid()">➕ Dodaj dziecko</button>
             </div>
             <div id="adminKidsList" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
         </div>
@@ -900,7 +900,7 @@
             <div class="emoji-grid" id="sectionEmojiPicker"></div>
             <div class="form-row">
                 <input type="text" id="newSectionName" class="input-text" style="flex:1;" placeholder="Nazwa sekcji (np. Rano / Przed wyjściem / Wieczór)">
-                <button class="btn btn-primary" onclick="addSectionFromAdmin()">➕ Dodaj sekcję</button>
+                <button type="button" class="btn btn-primary" onclick="addSectionFromAdmin()">➕ Dodaj sekcję</button>
             </div>
             <div id="adminSectionsList" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;"></div>
 
@@ -923,7 +923,7 @@
                 <button type="button" class="btn btn-outline" style="padding:4px 8px; font-size:0.78rem;" onclick="selectAllKidsForTask(true)">Wszyscy</button>
                 <div id="taskKidsCheckboxes" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
             </div>
-            <button class="btn btn-success" onclick="addTaskFromAdmin()">➕ Dodaj zadanie do planu</button>
+            <button type="button" class="btn btn-success" onclick="addTaskFromAdmin()">➕ Dodaj zadanie do planu</button>
 
             <h3 style="margin: 22px 0 10px 0; font-size:1.05rem;">Aktualne zadania (kliknij nagłówek sekcji, aby rozwinąć / zwinąć):</h3>
             <div id="adminTasksList"></div>
@@ -941,7 +941,7 @@
                 <button type="button" class="btn btn-outline" style="padding:4px 8px; font-size:0.78rem;" onclick="selectAllKidsForReward(true)">Wszyscy</button>
                 <div id="rewardKidsCheckboxes" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
             </div>
-            <button class="btn btn-success" onclick="addRewardFromAdmin()">➕ Dodaj nagrodę</button>
+            <button type="button" class="btn btn-success" onclick="addRewardFromAdmin()">➕ Dodaj nagrodę</button>
 
             <h3 style="margin: 18px 0 10px 0; font-size:1.05rem;">Aktualne nagrody:</h3>
             <div id="adminRewardsList"></div>
@@ -952,7 +952,7 @@
             <h2>💾 4. Domyślne schematy zadań (Szablony zadań)</h2>
             <div class="form-row">
                 <input type="text" id="newPresetName" class="input-text" style="flex:1;" placeholder="Nazwa schematu zadań (np. Dzień szkolny - 3 klasa)">
-                <button class="btn btn-primary" onclick="saveCurrentAsPreset()">💾 Zapisz obecne zadania jako schemat</button>
+                <button type="button" class="btn btn-primary" onclick="saveCurrentAsPreset()">💾 Zapisz obecne zadania jako schemat</button>
             </div>
             <div id="presetsList" class="presets-grid"></div>
         </div>
@@ -962,7 +962,7 @@
             <h2>🏆 5. Domyślne schematy nagród (Szablony nagród)</h2>
             <div class="form-row">
                 <input type="text" id="newRewardPresetName" class="input-text" style="flex:1;" placeholder="Nazwa schematu nagród (np. Nagrody weekendowe / Super tydzień)">
-                <button class="btn btn-primary" onclick="saveCurrentRewardsAsPreset()">💾 Zapisz obecne nagrody jako schemat</button>
+                <button type="button" class="btn btn-primary" onclick="saveCurrentRewardsAsPreset()">💾 Zapisz obecne nagrody jako schemat</button>
             </div>
             <div id="rewardPresetsList" class="presets-grid"></div>
         </div>
@@ -972,7 +972,7 @@
             <h2>🔐 6. Kod PIN Rodzica</h2>
             <div class="form-row">
                 <input type="password" id="newPinInput" class="input-text" placeholder="Nowy PIN (np. 1234)" maxlength="8">
-                <button class="btn btn-warning" onclick="changePin()">Zmień PIN</button>
+                <button type="button" class="btn btn-warning" onclick="changePin()">Zmień PIN</button>
             </div>
         </div>
     </div>
@@ -983,7 +983,7 @@
     <div class="modal-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
             <h3 style="color:var(--primary);">🎨 Wybierz obrazek z pełnej listy</h3>
-            <button class="btn btn-outline" onclick="closeEmojiLibrary()">✖ Zamknij</button>
+            <button type="button" class="btn btn-outline" onclick="closeEmojiLibrary()">✖ Zamknij</button>
         </div>
         <div id="emojiLibraryContent"></div>
     </div>
@@ -1014,8 +1014,8 @@
             </select>
         </div>
         <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
-            <button class="btn btn-outline" onclick="closeEditKidModal()">Anuluj</button>
-            <button class="btn btn-primary" onclick="saveEditedKid()">💾 Zapisz</button>
+            <button type="button" class="btn btn-outline" onclick="closeEditKidModal()">Anuluj</button>
+            <button type="button" class="btn btn-primary" onclick="saveEditedKid()">💾 Zapisz</button>
         </div>
     </div>
 </div>
@@ -1033,8 +1033,8 @@
             <input type="text" id="editSectionNameInput" class="input-text" style="flex:1;" placeholder="Nazwa sekcji (np. Rano)">
         </div>
         <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
-            <button class="btn btn-outline" onclick="closeEditSectionModal()">Anuluj</button>
-            <button class="btn btn-primary" onclick="saveEditedSection()">💾 Zapisz sekcję</button>
+            <button type="button" class="btn btn-outline" onclick="closeEditSectionModal()">Anuluj</button>
+            <button type="button" class="btn btn-primary" onclick="saveEditedSection()">💾 Zapisz sekcję</button>
         </div>
     </div>
 </div>
@@ -1062,8 +1062,8 @@
         </div>
         <div id="editTaskKidsBox" class="kids-Checkboxes"></div>
         <div style="display:flex; justify-content:flex-end; gap:8px;">
-            <button class="btn btn-outline" onclick="closeEditModal()">Anuluj</button>
-            <button class="btn btn-primary" onclick="saveEditedTask()">Zapisz</button>
+            <button type="button" class="btn btn-outline" onclick="closeEditModal()">Anuluj</button>
+            <button type="button" class="btn btn-primary" onclick="saveEditedTask()">Zapisz</button>
         </div>
     </div>
 </div>
@@ -1080,8 +1080,8 @@
         </div>
         <div id="editRewardKidsBox" class="kids-Checkboxes"></div>
         <div style="display:flex; justify-content:flex-end; gap:8px;">
-            <button class="btn btn-outline" onclick="closeEditRewardModal()">Anuluj</button>
-            <button class="btn btn-primary" onclick="saveEditedReward()">Zapisz</button>
+            <button type="button" class="btn btn-outline" onclick="closeEditRewardModal()">Anuluj</button>
+            <button type="button" class="btn btn-primary" onclick="saveEditedReward()">Zapisz</button>
         </div>
     </div>
 </div>
@@ -1101,13 +1101,13 @@
                 <button type="button" class="emoji-more-btn" onclick="openEmojiLibrary('presetNewTaskIcon')">➕</button>
                 <input type="text" id="presetNewTaskTitle" class="input-text" style="flex:1;" placeholder="Treść zadania w schemacie">
                 <input type="time" id="presetNewTaskTime" class="input-text" style="width:115px;" title="Opcjonalny czas wykonania">
-                <button class="btn btn-success" onclick="addTaskToEditedPreset()">Dodaj</button>
+                <button type="button" class="btn btn-success" onclick="addTaskToEditedPreset()">Dodaj</button>
             </div>
         </div>
         <div id="editPresetTasksContainer" style="max-height:300px; overflow-y:auto; margin-bottom:14px;"></div>
         <div style="display:flex; justify-content:flex-end; gap:8px;">
-            <button class="btn btn-outline" onclick="closePresetModal()">Zamknij</button>
-            <button class="btn btn-primary" onclick="saveEditedPresetModal()">💾 Zapisz schemat</button>
+            <button type="button" class="btn btn-outline" onclick="closePresetModal()">Zamknij</button>
+            <button type="button" class="btn btn-primary" onclick="saveEditedPresetModal()">💾 Zapisz schemat</button>
         </div>
     </div>
 </div>
@@ -1126,13 +1126,13 @@
                 <input type="text" id="rewardPresetNewIcon" class="input-text" style="width:55px; text-align:center;" value="🍦">
                 <button type="button" class="emoji-more-btn" onclick="openEmojiLibrary('rewardPresetNewIcon')">➕</button>
                 <input type="text" id="rewardPresetNewTitle" class="input-text" style="flex:1;" placeholder="Treść nagrody w schemacie">
-                <button class="btn btn-success" onclick="addRewardToEditedPreset()">Dodaj</button>
+                <button type="button" class="btn btn-success" onclick="addRewardToEditedPreset()">Dodaj</button>
             </div>
         </div>
         <div id="editRewardPresetItemsContainer" style="max-height:300px; overflow-y:auto; margin-bottom:14px;"></div>
         <div style="display:flex; justify-content:flex-end; gap:8px;">
-            <button class="btn btn-outline" onclick="closeRewardPresetModal()">Zamknij</button>
-            <button class="btn btn-primary" onclick="saveEditedRewardPresetModal()">💾 Zapisz schemat nagród</button>
+            <button type="button" class="btn btn-outline" onclick="closeRewardPresetModal()">Zamknij</button>
+            <button type="button" class="btn btn-primary" onclick="saveEditedRewardPresetModal()">💾 Zapisz schemat nagród</button>
         </div>
     </div>
 </div>
@@ -1172,7 +1172,6 @@
     let lastSyncedUpdatedAt = 0;
     let isInitialCloudSyncDone = false;
 
-    // Stan rozwinięcia sekcji w Panelu Rodzica oraz na tablicach dzieci (trzymany lokalnie)
     let collapsedAdminSections = {};
     let collapsedKidSections = {};
 
@@ -1241,6 +1240,71 @@
         ]
     };
 
+    // ================= AUTOMATYCZNA SANITYZACJA DANYCH (NAPRAWA STARYCH STRUKTUR Z FIREBASE / LOCALSTORAGE) =================
+    function sanitizeAppData(data) {
+        if (!data || typeof data !== 'object') {
+            return JSON.parse(JSON.stringify(DEFAULT_STATE));
+        }
+        if (data.updatedAt === undefined) data.updatedAt = 0;
+        if (typeof data.pin !== 'string') data.pin = '1234';
+
+        // Firebase potrafi zamienić obiekty z kluczami numerycznymi lub puste węzły na obiekty/null zamiast tablic
+        const toArray = (val, fallback) => {
+            if (Array.isArray(val)) return val.filter(Boolean);
+            if (val && typeof val === 'object') return Object.values(val).filter(Boolean);
+            return JSON.parse(JSON.stringify(fallback));
+        };
+
+        data.kids = toArray(data.kids, DEFAULT_STATE.kids);
+        data.sections = toArray(data.sections, DEFAULT_STATE.sections);
+        data.tasks = toArray(data.tasks, []);
+        data.rewards = toArray(data.rewards, []);
+        data.presets = toArray(data.presets, DEFAULT_STATE.presets);
+        data.rewardPresets = toArray(data.rewardPresets, DEFAULT_STATE.rewardPresets);
+
+        const allKidIds = data.kids.map(k => k.id);
+
+        data.tasks.forEach((t, idx) => {
+            if (!t.id) t.id = 't_' + Date.now() + '_' + idx;
+            if (!t.title) t.title = 'Zadanie';
+            if (!t.icon) t.icon = '📌';
+            if (t.sectionId === undefined) t.sectionId = '';
+            if (t.dueTime === undefined) t.dueTime = '';
+            t.assignedKids = toArray(t.assignedKids, allKidIds);
+            if (!t.statusByKid || typeof t.statusByKid !== 'object') t.statusByKid = {};
+            if (!t.orderByKid || typeof t.orderByKid !== 'object') t.orderByKid = {};
+            if (!t.prevOrderByKid || typeof t.prevOrderByKid !== 'object') t.prevOrderByKid = {};
+            if (!t.lateSecondsByKid || typeof t.lateSecondsByKid !== 'object') t.lateSecondsByKid = {};
+        });
+
+        data.rewards.forEach((r, idx) => {
+            if (!r.id) r.id = 'r_' + Date.now() + '_' + idx;
+            if (!r.title) r.title = 'Nagroda';
+            if (!r.icon) r.icon = '🎁';
+            r.assignedKids = toArray(r.assignedKids, allKidIds);
+            if (!r.statusByKid || typeof r.statusByKid !== 'object') r.statusByKid = {};
+            if (!r.orderByKid || typeof r.orderByKid !== 'object') r.orderByKid = {};
+        });
+
+        data.presets.forEach(p => {
+            p.tasks = toArray(p.tasks, []);
+            p.tasks.forEach(pt => {
+                pt.assignedKids = toArray(pt.assignedKids, ['ALL']);
+            });
+        });
+
+        data.rewardPresets.forEach(rp => {
+            rp.rewards = toArray(rp.rewards, []);
+            rp.rewards.forEach(pr => {
+                pr.assignedKids = toArray(pr.assignedKids, ['ALL']);
+            });
+        });
+
+        delete data.globalScale;
+        delete data.layout;
+        return data;
+    }
+
     // ================= LOKALNE USTAWIENIA URZĄDZENIA (NIE SYNCHRONIZOWANE Z CHMURĄ) =================
     let localDeviceSettings = loadLocalDeviceSettings();
 
@@ -1250,9 +1314,9 @@
             if (raw) {
                 const parsed = JSON.parse(raw);
                 return {
-                    globalScale: parsed.globalScale || 1,
-                    layout: parsed.layout || 'columns',
-                    kidZooms: parsed.kidZooms || {}
+                    globalScale: Number(parsed.globalScale) || 1,
+                    layout: parsed.layout === 'rows' ? 'rows' : 'columns',
+                    kidZooms: (parsed.kidZooms && typeof parsed.kidZooms === 'object') ? parsed.kidZooms : {}
                 };
             }
         } catch (e) {}
@@ -1262,26 +1326,30 @@
         let fallbackKidZooms = {};
         try {
             const oldRaw = JSON.parse(localStorage.getItem('rodzinnyPlanFull_v3') || '{}');
-            if (oldRaw.globalScale) fallbackScale = oldRaw.globalScale;
-            if (oldRaw.layout) fallbackLayout = oldRaw.layout;
+            if (oldRaw.globalScale) fallbackScale = Number(oldRaw.globalScale) || 1;
+            if (oldRaw.layout) fallbackLayout = oldRaw.layout === 'rows' ? 'rows' : 'columns';
             if (Array.isArray(oldRaw.kids)) {
                 oldRaw.kids.forEach(k => {
-                    if (k.zoom) fallbackKidZooms[k.id] = k.zoom;
+                    if (k && k.zoom) fallbackKidZooms[k.id] = Number(k.zoom) || 1;
                 });
             }
         } catch (e) {}
 
         const initial = { globalScale: fallbackScale, layout: fallbackLayout, kidZooms: fallbackKidZooms };
-        localStorage.setItem('rodzinnyPlan_localSettings_v1', JSON.stringify(initial));
+        try {
+            localStorage.setItem('rodzinnyPlan_localSettings_v1', JSON.stringify(initial));
+        } catch (e) {}
         return initial;
     }
 
     function saveLocalDeviceSettings() {
-        localStorage.setItem('rodzinnyPlan_localSettings_v1', JSON.stringify(localDeviceSettings));
+        try {
+            localStorage.setItem('rodzinnyPlan_localSettings_v1', JSON.stringify(localDeviceSettings));
+        } catch (e) {}
     }
 
     function getKidLocalZoom(kidId) {
-        return (localDeviceSettings.kidZooms && localDeviceSettings.kidZooms[kidId]) || 1;
+        return (localDeviceSettings.kidZooms && Number(localDeviceSettings.kidZooms[kidId])) || 1;
     }
 
     let cloudConfig = loadCloudConfig();
@@ -1309,7 +1377,7 @@
                 refreshToken: urlRt || saved.refreshToken || '',
                 tokenExpiresAt: saved.tokenExpiresAt || 0
             };
-            localStorage.setItem('rodzinnyPlan_cloudCfg', JSON.stringify(cfg));
+            try { localStorage.setItem('rodzinnyPlan_cloudCfg', JSON.stringify(cfg)); } catch (e) {}
             return cfg;
         }
         return {
@@ -1325,25 +1393,22 @@
 
     function loadData() {
         const raw = localStorage.getItem('rodzinnyPlanFull_v3');
-        if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
+        if (!raw) return sanitizeAppData(JSON.parse(JSON.stringify(DEFAULT_STATE)));
         try {
             const parsed = JSON.parse(raw);
-            if (parsed.updatedAt === undefined) parsed.updatedAt = 0;
-            if (!parsed.sections) parsed.sections = JSON.parse(JSON.stringify(DEFAULT_STATE.sections));
-            if (!parsed.rewards) parsed.rewards = JSON.parse(JSON.stringify(DEFAULT_STATE.rewards));
-            if (!parsed.rewardPresets) parsed.rewardPresets = JSON.parse(JSON.stringify(DEFAULT_STATE.rewardPresets));
-            return parsed;
+            return sanitizeAppData(parsed);
         } catch (e) {
-            return JSON.parse(JSON.stringify(DEFAULT_STATE));
+            return sanitizeAppData(JSON.parse(JSON.stringify(DEFAULT_STATE)));
         }
     }
 
     function saveData(skipCloudPush = false) {
-        delete appData.globalScale;
-        delete appData.layout;
+        appData = sanitizeAppData(appData);
         appData.updatedAt = Date.now();
         lastSyncedUpdatedAt = appData.updatedAt;
-        localStorage.setItem('rodzinnyPlanFull_v3', JSON.stringify(appData));
+        try {
+            localStorage.setItem('rodzinnyPlanFull_v3', JSON.stringify(appData));
+        } catch (e) {}
         if (!skipCloudPush && cloudConfig.dbUrl && isInitialCloudSyncDone) {
             pushToCloud();
         }
@@ -1452,15 +1517,7 @@
             }
 
             if (force || (remoteData.updatedAt && remoteData.updatedAt > (appData.updatedAt || 0))) {
-                delete remoteData.globalScale;
-                delete remoteData.layout;
-                appData = remoteData;
-                if (!appData.tasks) appData.tasks = [];
-                if (!appData.kids) appData.kids = [];
-                if (!appData.sections) appData.sections = JSON.parse(JSON.stringify(DEFAULT_STATE.sections));
-                if (!appData.presets) appData.presets = [];
-                if (!appData.rewards) appData.rewards = [];
-                if (!appData.rewardPresets) appData.rewardPresets = [];
+                appData = sanitizeAppData(remoteData);
                 lastSyncedUpdatedAt = appData.updatedAt || Date.now();
                 localStorage.setItem('rodzinnyPlanFull_v3', JSON.stringify(appData));
 
@@ -1551,7 +1608,7 @@
 
     // ================= SKALOWANIE GLOBALNE I UKŁAD (LOKALNIE NA URZĄDZENIU) =================
     function applyGlobalScale() {
-        let scale = localDeviceSettings.globalScale || 1;
+        let scale = Number(localDeviceSettings.globalScale) || 1;
         if (scale < 0.4) scale = 0.4;
         if (scale > 1.2) scale = 1.2;
         localDeviceSettings.globalScale = scale;
@@ -1560,11 +1617,12 @@
         root.style.transform = `scale(${scale})`;
         root.style.width = `${100 / scale}%`;
         root.style.height = `${100 / scale}vh`;
-        document.getElementById('globalScaleLabel').textContent = Math.round(scale * 100) + '%';
+        const lbl = document.getElementById('globalScaleLabel');
+        if (lbl) lbl.textContent = Math.round(scale * 100) + '%';
     }
 
     function changeGlobalScale(delta) {
-        let next = Math.round(((localDeviceSettings.globalScale || 1) + delta) * 100) / 100;
+        let next = Math.round(((Number(localDeviceSettings.globalScale) || 1) + delta) * 100) / 100;
         if (next < 0.4) next = 0.4;
         if (next > 1.2) next = 1.2;
         localDeviceSettings.globalScale = next;
@@ -1581,6 +1639,7 @@
     function applyBoardLayout() {
         const board = document.getElementById('kidsView');
         const btn = document.getElementById('layoutToggleBtn');
+        if (!board || !btn) return;
         if (localDeviceSettings.layout === 'rows') {
             board.classList.remove('layout-columns');
             board.classList.add('layout-rows');
@@ -1629,7 +1688,7 @@
     }
 
     function computeCountdownInfo(dueTimeStr, isDone, lateSec = 0) {
-        if (!dueTimeStr) return null;
+        if (!dueTimeStr || typeof dueTimeStr !== 'string') return null;
         if (isDone) {
             if (lateSec > 0) {
                 const color = getLateHexColor(lateSec);
@@ -1682,7 +1741,7 @@
             timeFormatted = `${seconds}s`;
         }
 
-        const isSoon = diffSec <= 1800; // mniej niż 30 minut
+        const isSoon = diffSec <= 1800;
         return {
             text: `⏳ Do ${dueTimeStr} (zostało: ${timeFormatted})`,
             stateClass: isSoon ? 'soon' : '',
@@ -1746,7 +1805,7 @@
 
     function getTasksForKid(kidId) {
         return (appData.tasks || [])
-            .filter(t => t.assignedKids && t.assignedKids.includes(kidId))
+            .filter(t => t && Array.isArray(t.assignedKids) && t.assignedKids.includes(kidId))
             .sort((a, b) => {
                 const ordA = (a.orderByKid && a.orderByKid[kidId] !== undefined) ? a.orderByKid[kidId] : 999;
                 const ordB = (b.orderByKid && b.orderByKid[kidId] !== undefined) ? b.orderByKid[kidId] : 999;
@@ -1756,7 +1815,7 @@
 
     function getRewardsForKid(kidId) {
         return (appData.rewards || [])
-            .filter(r => r.assignedKids && r.assignedKids.includes(kidId))
+            .filter(r => r && Array.isArray(r.assignedKids) && r.assignedKids.includes(kidId))
             .sort((a, b) => {
                 const ordA = (a.orderByKid && a.orderByKid[kidId] !== undefined) ? a.orderByKid[kidId] : 999;
                 const ordB = (b.orderByKid && b.orderByKid[kidId] !== undefined) ? b.orderByKid[kidId] : 999;
@@ -1786,7 +1845,7 @@
 
     function createTaskItemElement(kid, task) {
         const isDone = !!(task.statusByKid && task.statusByKid[kid.id]);
-        const lateSec = (task.lateSecondsByKid && task.lateSecondsByKid[kid.id]) || 0;
+        const lateSec = (task.lateSecondsByKid && Number(task.lateSecondsByKid[kid.id])) || 0;
         const item = document.createElement('div');
         item.className = `task-item ${isDone ? 'done' : ''}`;
         item.draggable = true;
@@ -1795,35 +1854,80 @@
 
         if (isDone && lateSec > 0) {
             const lateColor = getLateHexColor(lateSec);
-            item.style.borderColor = lateColor;
-            item.style.background = `linear-gradient(90deg, ${lateColor}44 0%, #f8f9fa 100%)`;
-        }
-
-        let dueBadgeHtml = '';
-        if (task.dueTime) {
-            const info = computeCountdownInfo(task.dueTime, isDone, lateSec);
-            if (info) {
-                const inlineStyle = info.customColor
-                    ? `style="background:${info.customColor}; border-color:${info.customColor}; color:${info.textColor};"`
-                    : '';
-                dueBadgeHtml = `<div class="task-time-badge ${info.stateClass}" data-due-time="${task.dueTime}" data-is-done="${isDone}" data-late-sec="${lateSec}" ${inlineStyle}>${info.text}</div>`;
+            if (lateColor) {
+                item.style.borderColor = lateColor;
+                item.style.background = `linear-gradient(90deg, ${lateColor}44 0%, #f8f9fa 100%)`;
             }
         }
 
-        item.innerHTML = `
-            <div class="task-left" onclick="toggleTaskDone('${kid.id}', '${task.id}')">
-                <div class="check-circle">${isDone ? '✔' : ''}</div>
-                <span class="task-icon">${task.icon}</span>
-                <div class="task-content-box">
-                    <span class="task-title">${task.title}</span>
-                    ${dueBadgeHtml}
-                </div>
-            </div>
-            <div class="order-buttons">
-                <button class="btn-move" onclick="moveTask('${kid.id}', '${task.id}', -1)">⬆️</button>
-                <button class="btn-move" onclick="moveTask('${kid.id}', '${task.id}', 1)">⬇️</button>
-            </div>
-        `;
+        const leftDiv = document.createElement('div');
+        leftDiv.className = 'task-left';
+        leftDiv.addEventListener('click', () => toggleTaskDone(kid.id, task.id));
+
+        const checkCircle = document.createElement('div');
+        checkCircle.className = 'check-circle';
+        checkCircle.textContent = isDone ? '✔' : '';
+
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'task-icon';
+        iconSpan.textContent = task.icon || '📌';
+
+        const contentBox = document.createElement('div');
+        contentBox.className = 'task-content-box';
+
+        const titleSpan = document.createElement('span');
+        titleSpan.className = 'task-title';
+        titleSpan.textContent = task.title || '';
+        contentBox.appendChild(titleSpan);
+
+        if (task.dueTime) {
+            const info = computeCountdownInfo(task.dueTime, isDone, lateSec);
+            if (info) {
+                const badgeDiv = document.createElement('div');
+                badgeDiv.className = `task-time-badge ${info.stateClass}`;
+                badgeDiv.setAttribute('data-due-time', task.dueTime);
+                badgeDiv.setAttribute('data-is-done', String(isDone));
+                badgeDiv.setAttribute('data-late-sec', String(lateSec));
+                badgeDiv.textContent = info.text;
+                if (info.customColor) {
+                    badgeDiv.style.background = info.customColor;
+                    badgeDiv.style.borderColor = info.customColor;
+                    badgeDiv.style.color = info.textColor;
+                }
+                contentBox.appendChild(badgeDiv);
+            }
+        }
+
+        leftDiv.appendChild(checkCircle);
+        leftDiv.appendChild(iconSpan);
+        leftDiv.appendChild(contentBox);
+
+        const orderButtons = document.createElement('div');
+        orderButtons.className = 'order-buttons';
+
+        const btnUp = document.createElement('button');
+        btnUp.type = 'button';
+        btnUp.className = 'btn-move';
+        btnUp.textContent = '⬆️';
+        btnUp.addEventListener('click', (e) => {
+            e.stopPropagation();
+            moveTask(kid.id, task.id, -1);
+        });
+
+        const btnDown = document.createElement('button');
+        btnDown.type = 'button';
+        btnDown.className = 'btn-move';
+        btnDown.textContent = '⬇️';
+        btnDown.addEventListener('click', (e) => {
+            e.stopPropagation();
+            moveTask(kid.id, task.id, 1);
+        });
+
+        orderButtons.appendChild(btnUp);
+        orderButtons.appendChild(btnDown);
+
+        item.appendChild(leftDiv);
+        item.appendChild(orderButtons);
 
         item.addEventListener('dragstart', () => {
             draggedTaskInfo = { kidId: kid.id, taskId: task.id };
@@ -1852,6 +1956,7 @@
     function renderKidsBoard() {
         saveCurrentScrolls();
         const board = document.getElementById('kidsView');
+        if (!board) return;
         board.innerHTML = '';
 
         (appData.kids || []).forEach(kid => {
@@ -1866,40 +1971,15 @@
             const col = document.createElement('div');
             col.className = 'kid-column';
             col.dataset.kidColumn = kid.id;
-            col.style.borderTopColor = kid.color;
+            col.style.borderTopColor = kid.color || '#6c5ce7';
             col.style.setProperty('--kid-scale', zoom);
-
-            let rewardsHtml = '';
-            if (kidRewards.length > 0) {
-                const rewardsItemsHtml = kidRewards.map(rew => {
-                    const isRewardDone = !!(rew.statusByKid && rew.statusByKid[kid.id]);
-                    return `
-                        <div class="reward-item ${isRewardDone ? 'done' : ''}" onclick="toggleRewardDone('${kid.id}', '${rew.id}')">
-                            <div class="reward-left">
-                                <div class="check-circle">${isRewardDone ? '✔' : ''}</div>
-                                <span class="reward-icon">${rew.icon}</span>
-                                <span class="reward-title">${rew.title}</span>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                rewardsHtml = `
-                    <div class="rewards-section" data-reward-kid-id="${kid.id}">
-                        <div class="rewards-header">🎁 Nagrody (kliknij, aby odebrać):</div>
-                        <div class="rewards-list-container">
-                            ${rewardsItemsHtml}
-                        </div>
-                    </div>
-                `;
-            }
 
             col.innerHTML = `
                 <div class="kid-header">
                     <div class="kid-identity">
-                        <div class="kid-avatar">${kid.avatar}</div>
+                        <div class="kid-avatar">${kid.avatar || '👦'}</div>
                         <div>
-                            <div class="kid-name" style="color:${kid.color}">${kid.name}</div>
+                            <div class="kid-name" style="color:${kid.color || '#6c5ce7'}">${kid.name}</div>
                             <div class="kid-subtitle" style="font-size:0.82rem; color:var(--text-muted); font-weight:700;">
                                 Zrobione: ${doneCount} z ${total}
                             </div>
@@ -1907,9 +1987,9 @@
                     </div>
                     <div class="kid-header-controls">
                         <div class="zoom-controls" title="Skala tablicy dziecka (lokalna na tym urządzeniu: 40% - 200%)">
-                            <button class="zoom-btn" onclick="changeKidZoom('${kid.id}', -0.1)">🔍-</button>
-                            <button class="zoom-btn" onclick="resetKidZoom('${kid.id}')">${Math.round(zoom * 100)}%</button>
-                            <button class="zoom-btn" onclick="changeKidZoom('${kid.id}', 0.1)">🔍+</button>
+                            <button type="button" class="zoom-btn" onclick="changeKidZoom('${kid.id}', -0.1)">🔍-</button>
+                            <button type="button" class="zoom-btn" onclick="resetKidZoom('${kid.id}')">${Math.round(zoom * 100)}%</button>
+                            <button type="button" class="zoom-btn" onclick="changeKidZoom('${kid.id}', 0.1)">🔍+</button>
                         </div>
                         <div class="kid-stars">⭐ ${doneCount}</div>
                     </div>
@@ -1926,10 +2006,10 @@
                     🏆 Brawo ${kid.name}! Wszystkie zadania wykonane! 🎉
                 </div>
 
-                ${rewardsHtml}
+                <div class="rewards-placeholder"></div>
 
                 <div class="kid-add-footer">
-                    <button class="btn btn-outline" style="width:100%; justify-content:center;" onclick="toggleKidDrawer('${kid.id}')">
+                    <button type="button" class="btn btn-outline" style="width:100%; justify-content:center;" onclick="toggleKidDrawer('${kid.id}')">
                         ➕ Dodaj własne zadanie
                     </button>
                     <div class="kid-add-drawer ${openKidDrawers[kid.id] ? 'open' : ''}" id="drawer_${kid.id}">
@@ -1945,23 +2025,51 @@
                             <button type="button" class="emoji-more-btn" onclick="openEmojiLibrary('kidEmoji_${kid.id}')">➕</button>
                             <input type="text" id="kidInput_${kid.id}" class="input-text" style="flex:1; min-width:120px;" placeholder="Wpisz zadanie..." onkeydown="if(event.key==='Enter') addKidOwnTask('${kid.id}')">
                             <input type="time" id="kidTime_${kid.id}" class="input-text" style="width:105px;" title="Opcjonalny czas wykonania">
-                            <button class="btn btn-success" onclick="addKidOwnTask('${kid.id}')">Dodaj</button>
+                            <button type="button" class="btn btn-success" onclick="addKidOwnTask('${kid.id}')">Dodaj</button>
                         </div>
                     </div>
                 </div>
             `;
 
+            // Renderowanie nagród bez ryzyka zepsucia cudzysłowów w HTML
+            const rewardsPlaceholder = col.querySelector('.rewards-placeholder');
+            if (kidRewards.length > 0) {
+                const rewSec = document.createElement('div');
+                rewSec.className = 'rewards-section';
+                rewSec.dataset.rewardKidId = kid.id;
+                rewSec.innerHTML = `<div class="rewards-header">🎁 Nagrody (kliknij, aby odebrać):</div>`;
+                const rewListContainer = document.createElement('div');
+                rewListContainer.className = 'rewards-list-container';
+
+                kidRewards.forEach(rew => {
+                    const isRewardDone = !!(rew.statusByKid && rew.statusByKid[kid.id]);
+                    const rItem = document.createElement('div');
+                    rItem.className = `reward-item ${isRewardDone ? 'done' : ''}`;
+                    rItem.addEventListener('click', () => toggleRewardDone(kid.id, rew.id));
+                    rItem.innerHTML = `
+                        <div class="reward-left">
+                            <div class="check-circle">${isRewardDone ? '✔' : ''}</div>
+                            <span class="reward-icon">${rew.icon || '🎁'}</span>
+                            <span class="reward-title"></span>
+                        </div>
+                    `;
+                    rItem.querySelector('.reward-title').textContent = rew.title || '';
+                    rewListContainer.appendChild(rItem);
+                });
+
+                rewSec.appendChild(rewListContainer);
+                rewSec.addEventListener('scroll', () => {
+                    scrollPositions['rew_' + kid.id] = rewSec.scrollTop;
+                });
+                rewardsPlaceholder.replaceWith(rewSec);
+            } else {
+                rewardsPlaceholder.remove();
+            }
+
             const listEl = col.querySelector('.task-list');
             listEl.addEventListener('scroll', () => {
                 scrollPositions['task_' + kid.id] = listEl.scrollTop;
             });
-
-            const rewEl = col.querySelector('.rewards-section');
-            if (rewEl) {
-                rewEl.addEventListener('scroll', () => {
-                    scrollPositions['rew_' + kid.id] = rewEl.scrollTop;
-                });
-            }
 
             // Grupowanie zadań według sekcji na tablicy dziecka
             const sections = appData.sections || [];
@@ -1979,15 +2087,16 @@
 
                 const headerEl = document.createElement('div');
                 headerEl.className = 'kid-section-header';
-                headerEl.onclick = () => toggleKidSectionCollapse(kid.id, sec.id);
+                headerEl.addEventListener('click', () => toggleKidSectionCollapse(kid.id, sec.id));
                 headerEl.innerHTML = `
                     <div class="kid-section-left">
                         <span>${isCollapsed ? '▶' : '▼'}</span>
-                        <span>${sec.icon}</span>
-                        <span>${sec.name}</span>
+                        <span>${sec.icon || '🗂️'}</span>
+                        <span class="sec-name-txt"></span>
                     </div>
                     <span style="font-size:calc(0.8rem * var(--kid-scale)); color:var(--text-muted);">${secDone}/${secTasks.length}</span>
                 `;
+                headerEl.querySelector('.sec-name-txt').textContent = sec.name || '';
 
                 const tasksWrap = document.createElement('div');
                 tasksWrap.className = `kid-section-tasks ${isCollapsed ? 'collapsed' : ''}`;
@@ -2013,7 +2122,7 @@
 
                     const headerEl = document.createElement('div');
                     headerEl.className = 'kid-section-header';
-                    headerEl.onclick = () => toggleKidSectionCollapse(kid.id, secId);
+                    headerEl.addEventListener('click', () => toggleKidSectionCollapse(kid.id, secId));
                     headerEl.innerHTML = `
                         <div class="kid-section-left">
                             <span>${isCollapsed ? '▶' : '▼'}</span>
@@ -2046,7 +2155,7 @@
     }
 
     function toggleTaskDone(kidId, taskId) {
-        const task = appData.tasks.find(t => t.id === taskId);
+        const task = (appData.tasks || []).find(t => t.id === taskId);
         if (!task) return;
         if (!task.statusByKid) task.statusByKid = {};
         if (!task.orderByKid) task.orderByKid = {};
@@ -2065,8 +2174,7 @@
         const currentIndex = kidTasks.findIndex(t => t.id === taskId);
 
         if (newState) {
-            // Sprawdzenie i zapisanie spóźnienia względem wyznaczonego czasu (dueTime)
-            if (task.dueTime) {
+            if (task.dueTime && typeof task.dueTime === 'string') {
                 const parts = task.dueTime.split(':');
                 const targetH = parseInt(parts[0], 10);
                 const targetM = parseInt(parts[1], 10);
@@ -2080,24 +2188,21 @@
                 delete task.lateSecondsByKid[kidId];
             }
 
-            // 1. Zapamiętujemy obecną pozycję zadania przed przeniesieniem na dół
-            task.prevOrderByKid[kidId] = currentIndex;
-
-            // 2. Przesuwamy zadanie na sam koniec listy
-            kidTasks.splice(currentIndex, 1);
-            kidTasks.push(task);
-            kidTasks.forEach((t, idx) => {
-                t.orderByKid[kidId] = idx;
-            });
+            if (currentIndex !== -1) {
+                task.prevOrderByKid[kidId] = currentIndex;
+                kidTasks.splice(currentIndex, 1);
+                kidTasks.push(task);
+                kidTasks.forEach((t, idx) => {
+                    t.orderByKid[kidId] = idx;
+                });
+            }
         } else {
-            // Usunięcie zapisanego spóźnienia po odznaczeniu zadania
             delete task.lateSecondsByKid[kidId];
 
-            // 3. Przywracamy zadanie na zapamiętaną pozycję
-            if (task.prevOrderByKid[kidId] !== undefined) {
-                let targetIdx = task.prevOrderByKid[kidId];
+            if (currentIndex !== -1 && task.prevOrderByKid[kidId] !== undefined) {
+                let targetIdx = Number(task.prevOrderByKid[kidId]);
                 kidTasks.splice(currentIndex, 1);
-                if (targetIdx < 0) targetIdx = 0;
+                if (isNaN(targetIdx) || targetIdx < 0) targetIdx = 0;
                 if (targetIdx > kidTasks.length) targetIdx = kidTasks.length;
                 kidTasks.splice(targetIdx, 0, task);
 
@@ -2117,10 +2222,14 @@
         if (newState) {
             if (total > 0 && doneCount === total) {
                 playSound('win');
-                confetti({ particleCount: 110, spread: 80, origin: { y: 0.6 } });
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 110, spread: 80, origin: { y: 0.6 } });
+                }
             } else {
                 playSound('check');
-                confetti({ particleCount: 30, spread: 50, origin: { y: 0.7 } });
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 30, spread: 50, origin: { y: 0.7 } });
+                }
             }
         }
 
@@ -2137,7 +2246,9 @@
 
         if (newState) {
             playSound('win');
-            confetti({ particleCount: 60, spread: 70, origin: { y: 0.75 } });
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 60, spread: 70, origin: { y: 0.75 } });
+            }
         }
 
         saveData();
@@ -2211,9 +2322,13 @@
     }
 
     function quickFillKidTask(kidId, icon, title) {
-        document.getElementById(`kidEmoji_${kidId}`).value = icon;
-        document.getElementById(`kidInput_${kidId}`).value = title;
-        document.getElementById(`kidInput_${kidId}`).focus();
+        const emEl = document.getElementById(`kidEmoji_${kidId}`);
+        const inEl = document.getElementById(`kidInput_${kidId}`);
+        if (emEl) emEl.value = icon;
+        if (inEl) {
+            inEl.value = title;
+            inEl.focus();
+        }
     }
 
     function addKidOwnTask(kidId) {
@@ -2248,7 +2363,7 @@
 
     function resetAllProgress() {
         if (!confirm('Rozpocząć Nowy Dzień i odznaczyć wszystkie wykonane zadania oraz odebrane nagrody?')) return;
-        appData.tasks.forEach(t => {
+        (appData.tasks || []).forEach(t => {
             t.statusByKid = {};
             t.lateSecondsByKid = {};
             if (t.prevOrderByKid) {
@@ -2355,7 +2470,6 @@
         document.getElementById('cloudApiKeyInput').value = cloudConfig.apiKey || '';
         document.getElementById('cloudEmailInput').value = cloudConfig.email || '';
 
-        // Pasek emoji dla sekcji
         const sectionEmojiPicker = document.getElementById('sectionEmojiPicker');
         sectionEmojiPicker.innerHTML = '';
         SECTION_EMOJIS.forEach(em => {
@@ -2375,7 +2489,6 @@
         renderAdminSectionsList();
         populateSectionSelects();
 
-        // Pasek emoji dla zadań
         const emojiPicker = document.getElementById('emojiPicker');
         emojiPicker.innerHTML = '';
         EMOJIS.forEach(em => {
@@ -2392,7 +2505,6 @@
         moreTaskBtn.onclick = () => openEmojiLibrary('taskAdmin');
         emojiPicker.appendChild(moreTaskBtn);
 
-        // Pasek emoji dla nagród
         const rewardEmojiPicker = document.getElementById('rewardEmojiPicker');
         rewardEmojiPicker.innerHTML = '';
         REWARD_EMOJIS.forEach(em => {
@@ -2417,10 +2529,10 @@
             card.innerHTML = `
                 <span style="font-size:1.3rem;">${kid.avatar}</span>
                 <span>${kid.name}</span>
-                <button class="btn-move" onclick="moveKidOrder(${idx}, -1)">⬅️</button>
-                <button class="btn-move" onclick="moveKidOrder(${idx}, 1)">➡️</button>
-                <button class="btn btn-warning" style="padding:3px 8px; font-size:0.75rem;" onclick="openEditKidModal('${kid.id}')">✏️ Edytuj</button>
-                <button class="btn btn-danger" style="padding:3px 8px; font-size:0.75rem;" onclick="removeKid('${kid.id}')">Usuń</button>
+                <button type="button" class="btn-move" onclick="moveKidOrder(${idx}, -1)">⬅️</button>
+                <button type="button" class="btn-move" onclick="moveKidOrder(${idx}, 1)">➡️</button>
+                <button type="button" class="btn btn-warning" style="padding:3px 8px; font-size:0.75rem;" onclick="openEditKidModal('${kid.id}')">✏️ Edytuj</button>
+                <button type="button" class="btn btn-danger" style="padding:3px 8px; font-size:0.75rem;" onclick="removeKid('${kid.id}')">Usuń</button>
             `;
             kidsList.appendChild(card);
         });
@@ -2461,12 +2573,13 @@
             card.style.cssText = `background:#f3f0ff; border:2px solid #d0bfff; border-radius:12px; padding:7px 12px; display:flex; align-items:center; gap:8px; font-weight:800;`;
             card.innerHTML = `
                 <span style="font-size:1.3rem;">${sec.icon}</span>
-                <span>${sec.name}</span>
-                <button class="btn-move" onclick="moveSectionOrder(${idx}, -1)" title="Przesuń sekcję w lewo/górę">⬅️</button>
-                <button class="btn-move" onclick="moveSectionOrder(${idx}, 1)" title="Przesuń sekcję w prawo/dół">➡️</button>
-                <button class="btn btn-warning" style="padding:3px 8px; font-size:0.75rem;" onclick="openEditSectionModal('${sec.id}')">✏️ Edytuj</button>
-                <button class="btn btn-danger" style="padding:3px 8px; font-size:0.75rem;" onclick="removeSection('${sec.id}')">🗑️</button>
+                <span class="sec-admin-name"></span>
+                <button type="button" class="btn-move" onclick="moveSectionOrder(${idx}, -1)" title="Przesuń sekcję w lewo/górę">⬅️</button>
+                <button type="button" class="btn-move" onclick="moveSectionOrder(${idx}, 1)" title="Przesuń sekcję w prawo/dół">➡️</button>
+                <button type="button" class="btn btn-warning" style="padding:3px 8px; font-size:0.75rem;" onclick="openEditSectionModal('${sec.id}')">✏️ Edytuj</button>
+                <button type="button" class="btn btn-danger" style="padding:3px 8px; font-size:0.75rem;" onclick="removeSection('${sec.id}')">🗑️</button>
             `;
+            card.querySelector('.sec-admin-name').textContent = sec.name;
             container.appendChild(card);
         });
     }
@@ -2605,9 +2718,9 @@
     function removeKid(kidId) {
         if (!confirm('Usunąć profil tego dziecka?')) return;
         appData.kids = appData.kids.filter(k => k.id !== kidId);
-        appData.tasks.forEach(t => t.assignedKids = t.assignedKids.filter(id => id !== kidId));
+        appData.tasks.forEach(t => t.assignedKids = (t.assignedKids || []).filter(id => id !== kidId));
         appData.tasks = appData.tasks.filter(t => t.assignedKids.length > 0);
-        appData.rewards.forEach(r => r.assignedKids = r.assignedKids.filter(id => id !== kidId));
+        appData.rewards.forEach(r => r.assignedKids = (r.assignedKids || []).filter(id => id !== kidId));
         appData.rewards = appData.rewards.filter(r => r.assignedKids.length > 0);
         saveData();
         renderAdminPanel();
@@ -2684,7 +2797,7 @@
         const badges = (task.assignedKids || []).map(kId => {
             const k = appData.kids.find(x => x.id === kId);
             if (!k) return '';
-            const lateSec = (task.lateSecondsByKid && task.lateSecondsByKid[kId]) || 0;
+            const lateSec = (task.lateSecondsByKid && Number(task.lateSecondsByKid[kId])) || 0;
             const isDone = !!(task.statusByKid && task.statusByKid[kId]);
             if (isDone && lateSec > 0) {
                 const bg = getLateHexColor(lateSec);
@@ -2704,7 +2817,7 @@
             <div style="display:flex; align-items:center; gap:10px; flex:1;">
                 <span style="font-size:1.4rem;">${task.icon}</span>
                 <div>
-                    <div style="font-weight:800;">${task.title}</div>
+                    <div class="admin-task-title-txt" style="font-weight:800;"></div>
                     <div style="margin-top:4px; display:flex; flex-wrap:wrap; gap:4px; align-items:center;">
                         ${timeBadge}
                         ${badges}
@@ -2712,17 +2825,19 @@
                 </div>
             </div>
             <div style="display:flex; gap:6px; align-items:center;">
-                <button class="btn-move" onclick="moveAdminTask(${idx}, -1)">⬆️</button>
-                <button class="btn-move" onclick="moveAdminTask(${idx}, 1)">⬇️</button>
-                <button class="btn btn-warning" style="padding:5px 10px; font-size:0.8rem;" onclick="openEditModal('${task.id}')">✏️ Edytuj</button>
-                <button class="btn btn-danger" style="padding:5px 10px; font-size:0.8rem;" onclick="deleteTask('${task.id}')">🗑️</button>
+                <button type="button" class="btn-move" onclick="moveAdminTask(${idx}, -1)">⬆️</button>
+                <button type="button" class="btn-move" onclick="moveAdminTask(${idx}, 1)">⬇️</button>
+                <button type="button" class="btn btn-warning" style="padding:5px 10px; font-size:0.8rem;" onclick="openEditModal('${task.id}')">✏️ Edytuj</button>
+                <button type="button" class="btn btn-danger" style="padding:5px 10px; font-size:0.8rem;" onclick="deleteTask('${task.id}')">🗑️</button>
             </div>
         `;
+        row.querySelector('.admin-task-title-txt').textContent = task.title;
         return row;
     }
 
     function renderAdminTasksList() {
         const container = document.getElementById('adminTasksList');
+        if (!container) return;
         container.innerHTML = '';
 
         const sections = appData.sections || [];
@@ -2749,19 +2864,20 @@
                 <div style="display:flex; align-items:center; gap:10px;">
                     <span>${isCollapsed ? '▶' : '▼'}</span>
                     <span style="font-size:1.35rem;">${sec.icon}</span>
-                    <span>${sec.name}</span>
+                    <span class="acc-sec-name"></span>
                     <span style="font-size:0.82rem; color:var(--text-muted); font-weight:800;">(Zadań: ${secTasksWithIdx.length})</span>
                 </div>
                 <div style="display:flex; gap:6px;">
-                    <button class="btn btn-warning" style="padding:4px 9px; font-size:0.76rem;" onclick="openEditSectionModal('${sec.id}')">✏️ Edytuj sekcję</button>
+                    <button type="button" class="btn btn-warning" style="padding:4px 9px; font-size:0.76rem;" onclick="openEditSectionModal('${sec.id}')">✏️ Edytuj sekcję</button>
                 </div>
             `;
+            header.querySelector('.acc-sec-name').textContent = sec.name;
 
             const body = document.createElement('div');
             body.className = `admin-category-body ${isCollapsed ? 'collapsed' : ''}`;
 
             if (secTasksWithIdx.length === 0) {
-                body.innerHTML = `<div style="font-size:0.85rem; color:var(--text-muted); font-weight:700; padding:6px;">Brak zadań w tej sekcji. Wybierz „${sec.icon} ${sec.name}” podczas dodawania lub edycji zadania.</div>`;
+                body.innerHTML = `<div style="font-size:0.85rem; color:var(--text-muted); font-weight:700; padding:6px;">Brak zadań w tej sekcji. Wybierz tę sekcję podczas dodawania lub edycji zadania.</div>`;
             } else {
                 secTasksWithIdx.forEach(({ task, idx }) => {
                     body.appendChild(createAdminTaskRowElement(task, idx));
@@ -2825,17 +2941,18 @@
                 <div style="display:flex; align-items:center; gap:10px; flex:1;">
                     <span style="font-size:1.4rem;">${rew.icon}</span>
                     <div>
-                        <div style="font-weight:800;">${rew.title}</div>
+                        <div class="admin-rew-title-txt" style="font-weight:800;"></div>
                         <div style="margin-top:3px;">${badges}</div>
                     </div>
                 </div>
                 <div style="display:flex; gap:6px; align-items:center;">
-                    <button class="btn-move" onclick="moveAdminReward(${idx}, -1)">⬆️</button>
-                    <button class="btn-move" onclick="moveAdminReward(${idx}, 1)">⬇️</button>
-                    <button class="btn btn-warning" style="padding:5px 10px; font-size:0.8rem;" onclick="openEditRewardModal('${rew.id}')">✏️ Edytuj</button>
-                    <button class="btn btn-danger" style="padding:5px 10px; font-size:0.8rem;" onclick="deleteReward('${rew.id}')">🗑️</button>
+                    <button type="button" class="btn-move" onclick="moveAdminReward(${idx}, -1)">⬆️</button>
+                    <button type="button" class="btn-move" onclick="moveAdminReward(${idx}, 1)">⬇️</button>
+                    <button type="button" class="btn btn-warning" style="padding:5px 10px; font-size:0.8rem;" onclick="openEditRewardModal('${rew.id}')">✏️ Edytuj</button>
+                    <button type="button" class="btn btn-danger" style="padding:5px 10px; font-size:0.8rem;" onclick="deleteReward('${rew.id}')">🗑️</button>
                 </div>
             `;
+            row.querySelector('.admin-rew-title-txt').textContent = rew.title;
             container.appendChild(row);
         });
     }
@@ -2847,7 +2964,7 @@
         appData.tasks[idx] = appData.tasks[target];
         appData.tasks[target] = temp;
         appData.kids.forEach(k => {
-            appData.tasks.filter(t => t.assignedKids.includes(k.id)).forEach((t, i) => {
+            appData.tasks.filter(t => (t.assignedKids || []).includes(k.id)).forEach((t, i) => {
                 if (!t.orderByKid) t.orderByKid = {};
                 t.orderByKid[k.id] = i;
             });
@@ -2863,7 +2980,7 @@
         appData.rewards[idx] = appData.rewards[target];
         appData.rewards[target] = temp;
         appData.kids.forEach(k => {
-            appData.rewards.filter(r => r.assignedKids.includes(k.id)).forEach((r, i) => {
+            appData.rewards.filter(r => (r.assignedKids || []).includes(k.id)).forEach((r, i) => {
                 if (!r.orderByKid) r.orderByKid = {};
                 r.orderByKid[k.id] = i;
             });
@@ -2897,7 +3014,7 @@
         const box = document.getElementById('editTaskKidsBox');
         box.innerHTML = '';
         appData.kids.forEach(kid => {
-            const checked = task.assignedKids.includes(kid.id) ? 'checked' : '';
+            const checked = (task.assignedKids || []).includes(kid.id) ? 'checked' : '';
             const lbl = document.createElement('label');
             lbl.className = 'kid-checkbox-label';
             lbl.innerHTML = `<input type="checkbox" name="editTaskKid" value="${kid.id}" ${checked}> <span>${kid.avatar} ${kid.name}</span>`;
@@ -2936,7 +3053,7 @@
         const box = document.getElementById('editRewardKidsBox');
         box.innerHTML = '';
         appData.kids.forEach(kid => {
-            const checked = rew.assignedKids.includes(kid.id) ? 'checked' : '';
+            const checked = (rew.assignedKids || []).includes(kid.id) ? 'checked' : '';
             const lbl = document.createElement('label');
             lbl.className = 'kid-checkbox-label';
             lbl.innerHTML = `<input type="checkbox" name="editRewardKid" value="${kid.id}" ${checked}> <span>${kid.avatar} ${kid.name}</span>`;
@@ -2966,6 +3083,7 @@
     // ================= SCHEMATY ZADAŃ =================
     function renderPresets() {
         const container = document.getElementById('presetsList');
+        if (!container) return;
         container.innerHTML = '';
         (appData.presets || []).forEach((preset, idx) => {
             const card = document.createElement('div');
@@ -2973,20 +3091,21 @@
             card.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:start;">
                     <div>
-                        <div style="font-weight:900; font-size:1.05rem;">${preset.name}</div>
+                        <div class="preset-name-txt" style="font-weight:900; font-size:1.05rem;"></div>
                         <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">Zadań: ${(preset.tasks || []).length}</div>
                     </div>
                     <div style="display:flex; gap:4px;">
-                        <button class="btn-move" onclick="movePreset(${idx}, -1)">⬆️</button>
-                        <button class="btn-move" onclick="movePreset(${idx}, 1)">⬇️</button>
+                        <button type="button" class="btn-move" onclick="movePreset(${idx}, -1)">⬆️</button>
+                        <button type="button" class="btn-move" onclick="movePreset(${idx}, 1)">⬇️</button>
                     </div>
                 </div>
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                    <button class="btn btn-success" style="flex:1; padding:6px 10px; font-size:0.8rem;" onclick="loadPreset('${preset.id}')">📂 Wczytaj</button>
-                    <button class="btn btn-warning" style="padding:6px 10px; font-size:0.8rem;" onclick="openEditPresetModal('${preset.id}')">✏️ Edytuj</button>
-                    <button class="btn btn-danger" style="padding:6px 10px; font-size:0.8rem;" onclick="deletePreset('${preset.id}')">🗑️</button>
+                    <button type="button" class="btn btn-success" style="flex:1; padding:6px 10px; font-size:0.8rem;" onclick="loadPreset('${preset.id}')">📂 Wczytaj</button>
+                    <button type="button" class="btn btn-warning" style="padding:6px 10px; font-size:0.8rem;" onclick="openEditPresetModal('${preset.id}')">✏️ Edytuj</button>
+                    <button type="button" class="btn btn-danger" style="padding:6px 10px; font-size:0.8rem;" onclick="deletePreset('${preset.id}')">🗑️</button>
                 </div>
             `;
+            card.querySelector('.preset-name-txt').textContent = preset.name;
             container.appendChild(card);
         });
     }
@@ -3007,13 +3126,13 @@
         appData.presets.push({
             id: 'preset_' + Date.now(),
             name: '📌 ' + name,
-            tasks: appData.tasks.map(t => ({
+            tasks: (appData.tasks || []).map(t => ({
                 id: 'pt_' + Math.random().toString(36).substring(2, 8),
                 title: t.title,
                 icon: t.icon,
                 sectionId: t.sectionId || '',
                 dueTime: t.dueTime || '',
-                assignedKids: [...t.assignedKids]
+                assignedKids: [...(t.assignedKids || [])]
             }))
         });
         document.getElementById('newPresetName').value = '';
@@ -3026,7 +3145,8 @@
         if (!preset || !confirm(`Wczytać schemat zadań "${preset.name}"?`)) return;
         const allKidIds = appData.kids.map(k => k.id);
         appData.tasks = (preset.tasks || []).map((pt, index) => {
-            let assigned = pt.assignedKids.includes('ALL') ? [...allKidIds] : pt.assignedKids.filter(id => allKidIds.includes(id));
+            const pKids = Array.isArray(pt.assignedKids) ? pt.assignedKids : ['ALL'];
+            let assigned = pKids.includes('ALL') ? [...allKidIds] : pKids.filter(id => allKidIds.includes(id));
             if (assigned.length === 0) assigned = [...allKidIds];
             const orderByKid = {};
             assigned.forEach(kId => orderByKid[kId] = index);
@@ -3070,14 +3190,54 @@
         (preset.tasks || []).forEach((pt, idx) => {
             const row = document.createElement('div');
             row.className = 'admin-task-row';
-            row.innerHTML = `
-                <input type="text" class="input-text" style="width:50px; text-align:center;" value="${pt.icon}" onchange="updatePresetTaskField('${preset.id}', ${idx}, 'icon', this.value)">
-                <input type="text" class="input-text" style="flex:1;" value="${pt.title}" onchange="updatePresetTaskField('${preset.id}', ${idx}, 'title', this.value)">
-                <input type="time" class="input-text" style="width:110px;" value="${pt.dueTime || ''}" onchange="updatePresetTaskField('${preset.id}', ${idx}, 'dueTime', this.value)" title="Czas wykonania">
-                <button class="btn-move" onclick="movePresetTask('${preset.id}', ${idx}, -1)">⬆️</button>
-                <button class="btn-move" onclick="movePresetTask('${preset.id}', ${idx}, 1)">⬇️</button>
-                <button class="btn btn-danger" style="padding:5px 9px;" onclick="removePresetTask('${preset.id}', ${idx})">🗑️</button>
-            `;
+
+            const iconIn = document.createElement('input');
+            iconIn.type = 'text';
+            iconIn.className = 'input-text';
+            iconIn.style.cssText = 'width:50px; text-align:center;';
+            iconIn.value = pt.icon || '📌';
+            iconIn.onchange = () => updatePresetTaskField(preset.id, idx, 'icon', iconIn.value);
+
+            const titleIn = document.createElement('input');
+            titleIn.type = 'text';
+            titleIn.className = 'input-text';
+            titleIn.style.flex = '1';
+            titleIn.value = pt.title || '';
+            titleIn.onchange = () => updatePresetTaskField(preset.id, idx, 'title', titleIn.value);
+
+            const timeIn = document.createElement('input');
+            timeIn.type = 'time';
+            timeIn.className = 'input-text';
+            timeIn.style.width = '110px';
+            timeIn.value = pt.dueTime || '';
+            timeIn.title = 'Czas wykonania';
+            timeIn.onchange = () => updatePresetTaskField(preset.id, idx, 'dueTime', timeIn.value);
+
+            const btnUp = document.createElement('button');
+            btnUp.type = 'button';
+            btnUp.className = 'btn-move';
+            btnUp.textContent = '⬆️';
+            btnUp.onclick = () => movePresetTask(preset.id, idx, -1);
+
+            const btnDown = document.createElement('button');
+            btnDown.type = 'button';
+            btnDown.className = 'btn-move';
+            btnDown.textContent = '⬇️';
+            btnDown.onclick = () => movePresetTask(preset.id, idx, 1);
+
+            const btnDel = document.createElement('button');
+            btnDel.type = 'button';
+            btnDel.className = 'btn btn-danger';
+            btnDel.style.padding = '5px 9px';
+            btnDel.textContent = '🗑️';
+            btnDel.onclick = () => removePresetTask(preset.id, idx);
+
+            row.appendChild(iconIn);
+            row.appendChild(titleIn);
+            row.appendChild(timeIn);
+            row.appendChild(btnUp);
+            row.appendChild(btnDown);
+            row.appendChild(btnDel);
             container.appendChild(row);
         });
     }
@@ -3154,20 +3314,21 @@
             card.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:start;">
                     <div>
-                        <div style="font-weight:900; font-size:1.05rem;">${rpreset.name}</div>
+                        <div class="rpreset-name-txt" style="font-weight:900; font-size:1.05rem;"></div>
                         <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">Nagród: ${(rpreset.rewards || []).length}</div>
                     </div>
                     <div style="display:flex; gap:4px;">
-                        <button class="btn-move" onclick="moveRewardPreset(${idx}, -1)">⬆️</button>
-                        <button class="btn-move" onclick="moveRewardPreset(${idx}, 1)">⬇️</button>
+                        <button type="button" class="btn-move" onclick="moveRewardPreset(${idx}, -1)">⬆️</button>
+                        <button type="button" class="btn-move" onclick="moveRewardPreset(${idx}, 1)">⬇️</button>
                     </div>
                 </div>
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                    <button class="btn btn-success" style="flex:1; padding:6px 10px; font-size:0.8rem;" onclick="loadRewardPreset('${rpreset.id}')">📂 Wczytaj</button>
-                    <button class="btn btn-warning" style="padding:6px 10px; font-size:0.8rem;" onclick="openEditRewardPresetModal('${rpreset.id}')">✏️ Edytuj</button>
-                    <button class="btn btn-danger" style="padding:6px 10px; font-size:0.8rem;" onclick="deleteRewardPreset('${rpreset.id}')">🗑️</button>
+                    <button type="button" class="btn btn-success" style="flex:1; padding:6px 10px; font-size:0.8rem;" onclick="loadRewardPreset('${rpreset.id}')">📂 Wczytaj</button>
+                    <button type="button" class="btn btn-warning" style="padding:6px 10px; font-size:0.8rem;" onclick="openEditRewardPresetModal('${rpreset.id}')">✏️ Edytuj</button>
+                    <button type="button" class="btn btn-danger" style="padding:6px 10px; font-size:0.8rem;" onclick="deleteRewardPreset('${rpreset.id}')">🗑️</button>
                 </div>
             `;
+            card.querySelector('.rpreset-name-txt').textContent = rpreset.name;
             container.appendChild(card);
         });
     }
@@ -3193,7 +3354,7 @@
                 id: 'pr_' + Math.random().toString(36).substring(2, 8),
                 title: r.title,
                 icon: r.icon,
-                assignedKids: [...r.assignedKids]
+                assignedKids: [...(r.assignedKids || [])]
             }))
         });
         document.getElementById('newRewardPresetName').value = '';
@@ -3206,7 +3367,8 @@
         if (!preset || !confirm(`Wczytać schemat nagród "${preset.name}"?`)) return;
         const allKidIds = appData.kids.map(k => k.id);
         appData.rewards = (preset.rewards || []).map((pr, index) => {
-            let assigned = pr.assignedKids.includes('ALL') ? [...allKidIds] : pr.assignedKids.filter(id => allKidIds.includes(id));
+            const pKids = Array.isArray(pr.assignedKids) ? pr.assignedKids : ['ALL'];
+            let assigned = pKids.includes('ALL') ? [...allKidIds] : pKids.filter(id => allKidIds.includes(id));
             if (assigned.length === 0) assigned = [...allKidIds];
             const orderByKid = {};
             assigned.forEach(kId => orderByKid[kId] = index);
@@ -3246,13 +3408,45 @@
         (preset.rewards || []).forEach((pr, idx) => {
             const row = document.createElement('div');
             row.className = 'admin-task-row';
-            row.innerHTML = `
-                <input type="text" class="input-text" style="width:50px; text-align:center;" value="${pr.icon}" onchange="updateRewardPresetField('${preset.id}', ${idx}, 'icon', this.value)">
-                <input type="text" class="input-text" style="flex:1;" value="${pr.title}" onchange="updateRewardPresetField('${preset.id}', ${idx}, 'title', this.value)">
-                <button class="btn-move" onclick="moveRewardPresetItem('${preset.id}', ${idx}, -1)">⬆️</button>
-                <button class="btn-move" onclick="moveRewardPresetItem('${preset.id}', ${idx}, 1)">⬇️</button>
-                <button class="btn btn-danger" style="padding:5px 9px;" onclick="removeRewardPresetItem('${preset.id}', ${idx})">🗑️</button>
-            `;
+
+            const iconIn = document.createElement('input');
+            iconIn.type = 'text';
+            iconIn.className = 'input-text';
+            iconIn.style.cssText = 'width:50px; text-align:center;';
+            iconIn.value = pr.icon || '🎁';
+            iconIn.onchange = () => updateRewardPresetField(preset.id, idx, 'icon', iconIn.value);
+
+            const titleIn = document.createElement('input');
+            titleIn.type = 'text';
+            titleIn.className = 'input-text';
+            titleIn.style.flex = '1';
+            titleIn.value = pr.title || '';
+            titleIn.onchange = () => updateRewardPresetField(preset.id, idx, 'title', titleIn.value);
+
+            const btnUp = document.createElement('button');
+            btnUp.type = 'button';
+            btnUp.className = 'btn-move';
+            btnUp.textContent = '⬆️';
+            btnUp.onclick = () => moveRewardPresetItem(preset.id, idx, -1);
+
+            const btnDown = document.createElement('button');
+            btnDown.type = 'button';
+            btnDown.className = 'btn-move';
+            btnDown.textContent = '⬇️';
+            btnDown.onclick = () => moveRewardPresetItem(preset.id, idx, 1);
+
+            const btnDel = document.createElement('button');
+            btnDel.type = 'button';
+            btnDel.className = 'btn btn-danger';
+            btnDel.style.padding = '5px 9px';
+            btnDel.textContent = '🗑️';
+            btnDel.onclick = () => removeRewardPresetItem(preset.id, idx);
+
+            row.appendChild(iconIn);
+            row.appendChild(titleIn);
+            row.appendChild(btnUp);
+            row.appendChild(btnDown);
+            row.appendChild(btnDel);
             container.appendChild(row);
         });
     }
