@@ -1608,13 +1608,46 @@
         }
     }
 
+
+        function getLateHexColor(lateSec) {
+        if (!lateSec || lateSec <= 0) return null;
+        const minSec = 3 * 60;  // 3 minuty = #FFFF00
+        const maxSec = 15 * 60; // 15 minut = #FF0000
+        if (lateSec <= minSec) return '#FFFF00';
+        if (lateSec >= maxSec) return '#FF0000';
+        const ratio = (lateSec - minSec) / (maxSec - minSec);
+        const green = Math.round(255 * (1 - ratio));
+        return `#FF${green.toString(16).padStart(2, '0').toUpperCase()}00`;
+    }
+
+    function formatLateDuration(lateSec) {
+        const mins = Math.floor(lateSec / 60);
+        const secs = lateSec % 60;
+        const hours = Math.floor(mins / 60);
+        const remMins = mins % 60;
+        if (hours > 0) return `${hours}h ${remMins}m ${secs}s`;
+        if (mins > 0) return `${mins}m ${secs}s`;
+        return `${secs}s`;
+    }
+
     // ================= ODLICZANIE CZASU DO GODZINY WYKONANIA =================
-    function computeCountdownInfo(dueTimeStr, isDone) {
+        function computeCountdownInfo(dueTimeStr, isDone, lateSec = 0) {
         if (!dueTimeStr) return null;
         if (isDone) {
+            if (lateSec > 0) {
+                const color = getLateHexColor(lateSec);
+                const textColor = lateSec > 9 * 60 ? '#ffffff' : '#2d3436';
+                return {
+                    text: `⚠️ ${dueTimeStr} (Spóźnienie: +${formatLateDuration(lateSec)})`,
+                    stateClass: 'completed',
+                    customColor: color,
+                    textColor: textColor
+                };
+            }
             return {
-                text: `✅ ${dueTimeStr} (Wykonane)`,
-                stateClass: 'completed'
+                text: `✅ ${dueTimeStr} (Wykonane o czasie)`,
+                stateClass: 'completed',
+                customColor: null
             };
         }
         const parts = dueTimeStr.split(':');
@@ -1634,7 +1667,8 @@
             const overStr = overH > 0 ? `${overH}h ${remM}m temu` : `${remM}m temu`;
             return {
                 text: `⏰ Do ${dueTimeStr} (Po czasie: ${overStr})`,
-                stateClass: 'overdue'
+                stateClass: 'overdue',
+                customColor: null
             };
         }
 
@@ -1651,10 +1685,11 @@
             timeFormatted = `${seconds}s`;
         }
 
-        const isSoon = diffSec <= 1800; // mniej niż 30 minut
+        const isSoon = diffSec <= 1800;
         return {
             text: `⏳ Do ${dueTimeStr} (zostało: ${timeFormatted})`,
-            stateClass: isSoon ? 'soon' : ''
+            stateClass: isSoon ? 'soon' : '',
+            customColor: null
         };
     }
 
@@ -1662,10 +1697,20 @@
         document.querySelectorAll('.task-time-badge[data-due-time]').forEach(badge => {
             const dueTime = badge.getAttribute('data-due-time');
             const isDone = badge.getAttribute('data-is-done') === 'true';
-            const info = computeCountdownInfo(dueTime, isDone);
+            const lateSec = parseInt(badge.getAttribute('data-late-sec') || '0', 10);
+            const info = computeCountdownInfo(dueTime, isDone, lateSec);
             if (info) {
                 badge.textContent = info.text;
                 badge.className = 'task-time-badge ' + info.stateClass;
+                if (info.customColor) {
+                    badge.style.background = info.customColor;
+                    badge.style.borderColor = info.customColor;
+                    badge.style.color = info.textColor;
+                } else {
+                    badge.style.background = '';
+                    badge.style.borderColor = '';
+                    badge.style.color = '';
+                }
             }
         });
     }
@@ -1742,54 +1787,31 @@
         });
     }
 
-    function createTaskItemElement(kid, task) {
+        function createTaskItemElement(kid, task) {
         const isDone = !!(task.statusByKid && task.statusByKid[kid.id]);
+        const lateSec = (task.lateSecondsByKid && task.lateSecondsByKid[kid.id]) || 0;
         const item = document.createElement('div');
         item.className = `task-item ${isDone ? 'done' : ''}`;
         item.draggable = true;
         item.dataset.taskId = task.id;
         item.dataset.kidId = kid.id;
 
-        let dueBadgeHtml = '';
-        if (task.dueTime) {
-            const info = computeCountdownInfo(task.dueTime, isDone);
-            if (info) {
-                dueBadgeHtml = `<div class="task-time-badge ${info.stateClass}" data-due-time="${task.dueTime}" data-is-done="${isDone}">${info.text}</div>`;
-            }
+        if (isDone && lateSec > 0) {
+            const lateColor = getLateHexColor(lateSec);
+            item.style.borderColor = lateColor;
+            item.style.background = `linear-gradient(90deg, ${lateColor}44 0%, #f8f9fa 100%)`;
         }
 
-        item.innerHTML = `
-            <div class="task-left" onclick="toggleTaskDone('${kid.id}', '${task.id}')">
-                <div class="check-circle">${isDone ? '✔' : ''}</div>
-                <span class="task-icon">${task.icon}</span>
-                <div class="task-content-box">
-                    <span class="task-title">${task.title}</span>
-                    ${dueBadgeHtml}
-                </div>
-            </div>
-            <div class="order-buttons">
-                <button class="btn-move" onclick="moveTask('${kid.id}', '${task.id}', -1)">⬆️</button>
-                <button class="btn-move" onclick="moveTask('${kid.id}', '${task.id}', 1)">⬇️</button>
-            </div>
-        `;
-
-        item.addEventListener('dragstart', () => {
-            draggedTaskInfo = { kidId: kid.id, taskId: task.id };
-            item.classList.add('dragging');
-        });
-        item.addEventListener('dragend', () => {
-            item.classList.remove('dragging');
-            draggedTaskInfo = null;
-        });
-        item.addEventListener('dragover', (e) => e.preventDefault());
-        item.addEventListener('drop', (e) => {
-            e.preventDefault();
-            if (!draggedTaskInfo || draggedTaskInfo.kidId !== kid.id) return;
-            reorderTaskByDrop(kid.id, draggedTaskInfo.taskId, task.id);
-        });
-
-        return item;
-    }
+        let dueBadgeHtml = '';
+        if (task.dueTime) {
+            const info = computeCountdownInfo(task.dueTime, isDone, lateSec);
+            if (info) {
+                const inlineStyle = info.customColor
+                    ? `style="background:${info.customColor}; border-color:${info.customColor}; color:${info.textColor};"`
+                    : '';
+                dueBadgeHtml = `<div class="task-time-badge ${info.stateClass}" data-due-time="${task.dueTime}" data-is-done="${isDone}" data-late-sec="${lateSec}" ${inlineStyle}>${info.text}</div>`;
+            }
+        }
 
     function toggleKidSectionCollapse(kidId, secId) {
         const key = `${kidId}_${secId}`;
@@ -1999,12 +2021,12 @@
         if (!task.statusByKid) task.statusByKid = {};
         if (!task.orderByKid) task.orderByKid = {};
         if (!task.prevOrderByKid) task.prevOrderByKid = {};
+        if (!task.lateSecondsByKid) task.lateSecondsByKid = {};
 
         const newState = !task.statusByKid[kidId];
         task.statusByKid[kidId] = newState;
 
         const kidTasks = getTasksForKid(kidId);
-        // Upewniamy się, że zadania mają ciągłą numerację indeksów (0, 1, 2...)
         kidTasks.forEach((t, idx) => {
             if (!t.orderByKid) t.orderByKid = {};
             t.orderByKid[kidId] = idx;
@@ -2013,17 +2035,35 @@
         const currentIndex = kidTasks.findIndex(t => t.id === taskId);
 
         if (newState) {
+            // Sprawdzenie i zapisanie spóźnienia względem wyznaczonego czasu (dueTime)
+            if (task.dueTime) {
+                const parts = task.dueTime.split(':');
+                const targetH = parseInt(parts[0], 10);
+                const targetM = parseInt(parts[1], 10);
+                if (!isNaN(targetH) && !isNaN(targetM)) {
+                    const now = new Date();
+                    const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), targetH, targetM, 0, 0);
+                    const lateSec = Math.floor((now.getTime() - target.getTime()) / 1000);
+                    task.lateSecondsByKid[kidId] = lateSec > 0 ? lateSec : 0;
+                }
+            } else {
+                delete task.lateSecondsByKid[kidId];
+            }
+
             // 1. Zapamiętujemy obecną pozycję zadania przed przeniesieniem na dół
             task.prevOrderByKid[kidId] = currentIndex;
 
-            // 2. Przesuwamy zadanie na sam koniec listy, a pozostałym korygujemy indeksy
+            // 2. Przesuwamy zadanie na sam koniec listy
             kidTasks.splice(currentIndex, 1);
             kidTasks.push(task);
             kidTasks.forEach((t, idx) => {
                 t.orderByKid[kidId] = idx;
             });
         } else {
-            // 3. Przywracamy zadanie na zapamiętaną pozycję po usunięciu odklikania
+            // Usunięcie zapisanego spóźnienia po odznaczeniu zadania
+            delete task.lateSecondsByKid[kidId];
+
+            // 3. Przywracamy zadanie na zapamiętaną pozycję
             if (task.prevOrderByKid[kidId] !== undefined) {
                 let targetIdx = task.prevOrderByKid[kidId];
                 kidTasks.splice(currentIndex, 1);
@@ -2056,7 +2096,6 @@
 
         renderKidsBoard();
     }
-
 
     function toggleRewardDone(kidId, rewardId) {
         const rew = (appData.rewards || []).find(r => r.id === rewardId);
@@ -2177,8 +2216,9 @@
 
         function resetAllProgress() {
         if (!confirm('Rozpocząć Nowy Dzień i odznaczyć wszystkie wykonane zadania oraz odebrane nagrody?')) return;
-        appData.tasks.forEach(t => {
+                appData.tasks.forEach(t => {
             t.statusByKid = {};
+            t.lateSecondsByKid = {};
             if (t.prevOrderByKid) {
                 Object.keys(t.prevOrderByKid).forEach(kId => {
                     if (!t.orderByKid) t.orderByKid = {};
@@ -2609,9 +2649,18 @@
     }
 
     function createAdminTaskRowElement(task, idx) {
-        const badges = (task.assignedKids || []).map(kId => {
+
+                const badges = (task.assignedKids || []).map(kId => {
             const k = appData.kids.find(x => x.id === kId);
-            return k ? `<span class="badge-kid" style="background:${k.color}">${k.avatar} ${k.name}</span>` : '';
+            if (!k) return '';
+            const lateSec = (task.lateSecondsByKid && task.lateSecondsByKid[kId]) || 0;
+            const isDone = !!(task.statusByKid && task.statusByKid[kId]);
+            if (isDone && lateSec > 0) {
+                const bg = getLateHexColor(lateSec);
+                const txt = lateSec > 9 * 60 ? '#fff' : '#2d3436';
+                return `<span class="badge-kid" style="background:${bg}; color:${txt}; border:1px solid rgba(0,0,0,0.15);">${k.avatar} ${k.name} (+${formatLateDuration(lateSec)})</span>`;
+            }
+            return `<span class="badge-kid" style="background:${k.color}">${k.avatar} ${k.name}${isDone ? ' ✔' : ''}</span>`;
         }).join('');
 
         const timeBadge = task.dueTime
