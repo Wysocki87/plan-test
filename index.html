@@ -1189,12 +1189,12 @@
             { id: 'sec_evening', name: 'Wieczór', icon: '🌙' }
         ],
         tasks: [
-            { id: 't_1', title: 'Pościelić łóżko i przewietrzyć pokój', icon: '🛏️', sectionId: 'sec_morning', dueTime: '07:30', assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 0, kid_2: 0 } },
-            { id: 't_2', title: 'Umyć zęby i ubrać się do szkoły', icon: '🪥', sectionId: 'sec_morning', dueTime: '07:50', assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 1, kid_2: 1 } },
-            { id: 't_3', title: 'Odrobić pracę domową (3 klasa)', icon: '📚', sectionId: 'sec_afternoon', dueTime: '16:30', assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 2, kid_2: 2 } },
-            { id: 't_4', title: 'Nakarmić pupila / Wyprowadzić psa', icon: '🐕', sectionId: 'sec_afternoon', dueTime: '', assignedKids: ['kid_1'], statusByKid: {}, orderByKid: { kid_1: 3 } },
-            { id: 't_5', title: 'Poćwiczyć czytanie przez 15 minut', icon: '🎨', sectionId: 'sec_afternoon', dueTime: '', assignedKids: ['kid_2'], statusByKid: {}, orderByKid: { kid_2: 3 } },
-            { id: 't_6', title: 'Spakować plecak na jutro', icon: '🎒', sectionId: 'sec_evening', dueTime: '19:30', assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 4, kid_2: 4 } }
+            { id: 't_1', title: 'Pościelić łóżko i przewietrzyć pokój', icon: '🛏️', sectionId: 'sec_morning', dueTime: '07:30', assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 0, kid_2: 0 }, prevOrderByKid: {}, lateSecondsByKid: {} },
+            { id: 't_2', title: 'Umyć zęby i ubrać się do szkoły', icon: '🪥', sectionId: 'sec_morning', dueTime: '07:50', assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 1, kid_2: 1 }, prevOrderByKid: {}, lateSecondsByKid: {} },
+            { id: 't_3', title: 'Odrobić pracę domową (3 klasa)', icon: '📚', sectionId: 'sec_afternoon', dueTime: '16:30', assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 2, kid_2: 2 }, prevOrderByKid: {}, lateSecondsByKid: {} },
+            { id: 't_4', title: 'Nakarmić pupila / Wyprowadzić psa', icon: '🐕', sectionId: 'sec_afternoon', dueTime: '', assignedKids: ['kid_1'], statusByKid: {}, orderByKid: { kid_1: 3 }, prevOrderByKid: {}, lateSecondsByKid: {} },
+            { id: 't_5', title: 'Poćwiczyć czytanie przez 15 minut', icon: '🎨', sectionId: 'sec_afternoon', dueTime: '', assignedKids: ['kid_2'], statusByKid: {}, orderByKid: { kid_2: 3 }, prevOrderByKid: {}, lateSecondsByKid: {} },
+            { id: 't_6', title: 'Spakować plecak na jutro', icon: '🎒', sectionId: 'sec_evening', dueTime: '19:30', assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 4, kid_2: 4 }, prevOrderByKid: {}, lateSecondsByKid: {} }
         ],
         rewards: [
             { id: 'r_1', title: '30 minut ulubionej gry lub bajki 🎮', icon: '🎮', assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 0, kid_2: 0 } },
@@ -1257,7 +1257,6 @@
             }
         } catch (e) {}
 
-        // Migracja ze starszej wersji jeśli istniała
         let fallbackScale = 1;
         let fallbackLayout = 'columns';
         let fallbackKidZooms = {};
@@ -1340,7 +1339,6 @@
     }
 
     function saveData(skipCloudPush = false) {
-        // Upewniamy się, że globalScale i layout nie są zapisywane w obiekcie synchronizowanym
         delete appData.globalScale;
         delete appData.layout;
         appData.updatedAt = Date.now();
@@ -1608,11 +1606,11 @@
         }
     }
 
-
-        function getLateHexColor(lateSec) {
+    // ================= ODLICZANIE CZASU DO GODZINY WYKONANIA ORAZ KOLORY SPÓŹNIENIA =================
+    function getLateHexColor(lateSec) {
         if (!lateSec || lateSec <= 0) return null;
-        const minSec = 3 * 60;  // 3 minuty = #FFFF00
-        const maxSec = 15 * 60; // 15 minut = #FF0000
+        const minSec = 3 * 60;  // do 3 minut = #FFFF00
+        const maxSec = 15 * 60; // 15 minut i więcej = #FF0000
         if (lateSec <= minSec) return '#FFFF00';
         if (lateSec >= maxSec) return '#FF0000';
         const ratio = (lateSec - minSec) / (maxSec - minSec);
@@ -1630,8 +1628,7 @@
         return `${secs}s`;
     }
 
-    // ================= ODLICZANIE CZASU DO GODZINY WYKONANIA =================
-        function computeCountdownInfo(dueTimeStr, isDone, lateSec = 0) {
+    function computeCountdownInfo(dueTimeStr, isDone, lateSec = 0) {
         if (!dueTimeStr) return null;
         if (isDone) {
             if (lateSec > 0) {
@@ -1685,7 +1682,7 @@
             timeFormatted = `${seconds}s`;
         }
 
-        const isSoon = diffSec <= 1800;
+        const isSoon = diffSec <= 1800; // mniej niż 30 minut
         return {
             text: `⏳ Do ${dueTimeStr} (zostało: ${timeFormatted})`,
             stateClass: isSoon ? 'soon' : '',
@@ -1787,7 +1784,7 @@
         });
     }
 
-        function createTaskItemElement(kid, task) {
+    function createTaskItemElement(kid, task) {
         const isDone = !!(task.statusByKid && task.statusByKid[kid.id]);
         const lateSec = (task.lateSecondsByKid && task.lateSecondsByKid[kid.id]) || 0;
         const item = document.createElement('div');
@@ -1812,6 +1809,39 @@
                 dueBadgeHtml = `<div class="task-time-badge ${info.stateClass}" data-due-time="${task.dueTime}" data-is-done="${isDone}" data-late-sec="${lateSec}" ${inlineStyle}>${info.text}</div>`;
             }
         }
+
+        item.innerHTML = `
+            <div class="task-left" onclick="toggleTaskDone('${kid.id}', '${task.id}')">
+                <div class="check-circle">${isDone ? '✔' : ''}</div>
+                <span class="task-icon">${task.icon}</span>
+                <div class="task-content-box">
+                    <span class="task-title">${task.title}</span>
+                    ${dueBadgeHtml}
+                </div>
+            </div>
+            <div class="order-buttons">
+                <button class="btn-move" onclick="moveTask('${kid.id}', '${task.id}', -1)">⬆️</button>
+                <button class="btn-move" onclick="moveTask('${kid.id}', '${task.id}', 1)">⬇️</button>
+            </div>
+        `;
+
+        item.addEventListener('dragstart', () => {
+            draggedTaskInfo = { kidId: kid.id, taskId: task.id };
+            item.classList.add('dragging');
+        });
+        item.addEventListener('dragend', () => {
+            item.classList.remove('dragging');
+            draggedTaskInfo = null;
+        });
+        item.addEventListener('dragover', (e) => e.preventDefault());
+        item.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (!draggedTaskInfo || draggedTaskInfo.kidId !== kid.id) return;
+            reorderTaskByDrop(kid.id, draggedTaskInfo.taskId, task.id);
+        });
+
+        return item;
+    }
 
     function toggleKidSectionCollapse(kidId, secId) {
         const key = `${kidId}_${secId}`;
@@ -2015,7 +2045,7 @@
         restoreScrolls();
     }
 
-        function toggleTaskDone(kidId, taskId) {
+    function toggleTaskDone(kidId, taskId) {
         const task = appData.tasks.find(t => t.id === taskId);
         if (!task) return;
         if (!task.statusByKid) task.statusByKid = {};
@@ -2205,7 +2235,9 @@
             dueTime: dueTime || '',
             assignedKids: [kidId],
             statusByKid: {},
-            orderByKid
+            orderByKid,
+            prevOrderByKid: {},
+            lateSecondsByKid: {}
         });
 
         saveData();
@@ -2214,9 +2246,9 @@
         if (listEl) listEl.scrollTop = listEl.scrollHeight;
     }
 
-        function resetAllProgress() {
+    function resetAllProgress() {
         if (!confirm('Rozpocząć Nowy Dzień i odznaczyć wszystkie wykonane zadania oraz odebrane nagrody?')) return;
-                appData.tasks.forEach(t => {
+        appData.tasks.forEach(t => {
             t.statusByKid = {};
             t.lateSecondsByKid = {};
             if (t.prevOrderByKid) {
@@ -2230,8 +2262,7 @@
         (appData.rewards || []).forEach(r => r.statusByKid = {});
         saveData();
         renderKidsBoard();
-        }
-
+    }
 
     // ================= MODAL PEŁNEJ BIBLIOTEKI OBRAZKÓW (+) =================
     function openEmojiLibrary(target) {
@@ -2341,7 +2372,6 @@
         moreSecBtn.onclick = () => openEmojiLibrary('sectionAdmin');
         sectionEmojiPicker.appendChild(moreSecBtn);
 
-        // Lista utworzonych sekcji
         renderAdminSectionsList();
         populateSectionSelects();
 
@@ -2611,7 +2641,9 @@
             dueTime,
             assignedKids: checkedKids,
             statusByKid: {},
-            orderByKid
+            orderByKid,
+            prevOrderByKid: {},
+            lateSecondsByKid: {}
         });
 
         document.getElementById('newTaskText').value = '';
@@ -2649,8 +2681,7 @@
     }
 
     function createAdminTaskRowElement(task, idx) {
-
-                const badges = (task.assignedKids || []).map(kId => {
+        const badges = (task.assignedKids || []).map(kId => {
             const k = appData.kids.find(x => x.id === kId);
             if (!k) return '';
             const lateSec = (task.lateSecondsByKid && task.lateSecondsByKid[kId]) || 0;
@@ -2698,7 +2729,6 @@
         const validSectionIds = new Set(sections.map(s => s.id));
         const allTasks = appData.tasks || [];
 
-        // Renderujemy każdą sekcję jako rozwijany akordeon w Panelu Rodzica
         sections.forEach(sec => {
             const secTasksWithIdx = allTasks
                 .map((task, idx) => ({ task, idx }))
@@ -2743,7 +2773,6 @@
             container.appendChild(acc);
         });
 
-        // Zadania nieprzypisane do żadnej sekcji
         const uncategorizedWithIdx = allTasks
             .map((task, idx) => ({ task, idx }))
             .filter(item => !item.task.sectionId || !validSectionIds.has(item.task.sectionId));
@@ -3009,7 +3038,9 @@
                 dueTime: pt.dueTime || '',
                 assignedKids: assigned,
                 statusByKid: {},
-                orderByKid
+                orderByKid,
+                prevOrderByKid: {},
+                lateSecondsByKid: {}
             };
         });
         saveData();
@@ -3300,4 +3331,4 @@
     }
 </script>
 </body>
-            </html>
+</html>
