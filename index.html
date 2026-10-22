@@ -421,6 +421,19 @@
             background: #ffe3e3;
             color: #c92a2a;
             border-color: #ffa8a8;
+            animation: pulseOverdue 1.5s infinite;
+        }
+
+        .task-time-badge.completed {
+            background: #d3f9d8;
+            color: #2b8a3e;
+            border-color: #8ce99a;
+            animation: none;
+        }
+
+        @keyframes pulseOverdue {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
         }
 
         .task-timer-running {
@@ -997,14 +1010,20 @@
         <div class="admin-section" style="border: 2px solid #74b9ff; background: #f1f9ff;">
             <h2>☁️ 0. Synchronizacja Online + Dźwięk Celebracji</h2>
             <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:10px; font-weight:700;">
-                Wybierz dźwięk odtwarzany po pomyślnym ukończeniu zadania z timerem.
+                Możesz korzystać z bazy publicznej (wystarczy sam link Database URL) lub zabezpieczonej hasłem (Web API Key, E-mail, Hasło). Skala ekranu i orientacja tablic są zawsze trzymane lokalnie na urządzeniu.
             </p>
             <div class="form-row">
                 <input type="text" id="cloudDbUrlInput" class="input-text" style="flex:2; min-width:240px;" placeholder="Database URL (np. https://twoja-baza.firebasedatabase.app)">
                 <input type="text" id="cloudRoomIdInput" class="input-text" style="flex:1; min-width:130px;" placeholder="Kod rodziny (np. dom1)">
             </div>
             <div class="form-row" style="background: rgba(255,255,255,0.7); padding: 10px; border-radius: 12px; border: 1px solid #cce5ff;">
-                <span style="font-weight:900; font-size:0.85rem; width:100%; color:#0984e3;">🎉 Dźwięk celebracji ukończenia zadania:</span>
+                <span style="font-weight:900; font-size:0.85rem; width:100%; color:#0984e3;">🔐 Dane logowania do bazy (opcjonalnie dla reguł auth != null):</span>
+                <input type="text" id="cloudApiKeyInput" class="input-text" style="flex:1; min-width:180px;" placeholder="Firebase Web API Key (AIzaSy...)">
+                <input type="email" id="cloudEmailInput" class="input-text" style="flex:1; min-width:170px;" placeholder="E-mail (np. rodzic@dom.pl)">
+                <input type="password" id="cloudPasswordInput" class="input-text" style="flex:1; min-width:140px;" placeholder="Hasło do bazy">
+            </div>
+            <div class="form-row" style="background: rgba(255,255,255,0.7); padding: 10px; border-radius: 12px; border: 1px solid #cce5ff;">
+                <span style="font-weight:900; font-size:0.85rem; width:100%; color:#0984e3;">🎉 Dźwięk celebracji ukończenia zadania z timerem:</span>
                 <select id="celebrationSoundSelect" class="select-input" style="flex:1; min-width:260px;" onchange="saveCelebrationSoundSetting()">
                     <option value="https://actions.google.com/sounds/v1/crowds/applause.ogg">👏 Oklaski (Publiczność)</option>
                     <option value="https://actions.google.com/sounds/v1/alarms/bugle_tune.ogg">🎺 Fanfary trąbki</option>
@@ -1057,10 +1076,13 @@
 
         <!-- 2. SEKCJE ZADAŃ + DODAWANIE I EDYCJA ZADAŃ -->
         <div class="admin-section">
-            <h2>🗂️ 2A. Sekcje (kategorie) zadań</h2>
+            <h2>🗂️ 2A. Sekcje (kategorie) zadań – np. Rano, Po południu, Wieczór</h2>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:10px; font-weight:700;">
+                Twórz dowolne sekcje z obrazkiem. Kliknięcie sekcji poniżej rozwija lub zwija przypisane do niej zadania.
+            </p>
             <div class="emoji-grid" id="sectionEmojiPicker"></div>
             <div class="form-row">
-                <input type="text" id="newSectionName" class="input-text" style="flex:1;" placeholder="Nazwa sekcji (np. Rano / Po południu)">
+                <input type="text" id="newSectionName" class="input-text" style="flex:1;" placeholder="Nazwa sekcji (np. Rano / Po południu / Wieczór)">
                 <button type="button" class="btn btn-primary" onclick="addSectionFromAdmin()">➕ Dodaj sekcję</button>
             </div>
             <div id="adminSectionsList" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;"></div>
@@ -1068,19 +1090,20 @@
             <h2>📋 2B. Dodaj nowe zadanie</h2>
             <div class="emoji-grid" id="emojiPicker"></div>
             <div class="form-row">
-                <input type="text" id="newTaskText" class="input-text" style="flex:2; min-width:200px;" placeholder="Wpisz czynność (np. Nauka 15 minut)">
+                <input type="text" id="newTaskText" class="input-text" style="flex:2; min-width:200px;" placeholder="Wpisz czynność (np. Odrobić lekcje z matematyki)">
                 <div style="display:flex; align-items:center; gap:6px; background:#f8f9fa; padding:6px 10px; border-radius:10px; border:2px solid #dfe6e9;">
                     <span style="font-weight:800; font-size:0.85rem;">🗂️ Sekcja:</span>
                     <select id="newTaskSectionSelect" class="select-input" style="padding:5px 8px; border:none; background:white;"></select>
                 </div>
-                <div style="display:flex; align-items:center; gap:6px; background:#f8f9fa; padding:6px 10px; border-radius:10px; border:2px solid #dfe6e9;" title="Opcjonalny czas wykonania (godzina)">
-                    <span style="font-weight:800; font-size:0.85rem;">⏰ Godzina:</span>
+                <div style="display:flex; align-items:center; gap:6px; background:#f8f9fa; padding:6px 10px; border-radius:10px; border:2px solid #dfe6e9;" title="Opcjonalna godzina wykonania (odliczanie do godziny urządzenia)">
+                    <span style="font-weight:800; font-size:0.85rem;">⏰ Czas wykonania:</span>
                     <input type="time" id="newTaskDueTime" class="input-text" style="padding:4px 8px; background:white;">
                     <button type="button" class="btn btn-outline" style="padding:4px 7px; font-size:0.75rem;" onclick="document.getElementById('newTaskDueTime').value=''">✖</button>
                 </div>
-                <div style="display:flex; align-items:center; gap:6px; background:#fff0f6; padding:6px 10px; border-radius:10px; border:2px solid #f06595;" title="Opcjonalny czas trwania timera (minuty, kliknięcie startuje odliczanie)">
-                    <span style="font-weight:800; font-size:0.85rem; color:#c2255c;">⏱️ Timer (min):</span>
-                    <input type="number" id="newTaskTimerMinutes" class="input-text" style="width:75px; padding:4px 8px; background:white;" min="0" max="180" value="0">
+                <div style="display:flex; align-items:center; gap:6px; background:#fff0f6; padding:6px 10px; border-radius:10px; border:2px solid #f06595;" title="Opcjonalny czas odliczania timera w formacie hh:mm:ss (kliknięcie zadania startuje odliczanie)">
+                    <span style="font-weight:800; font-size:0.85rem; color:#c2255c;">⏱️ Timer (hh:mm:ss):</span>
+                    <input type="time" id="newTaskTimerDuration" class="input-text" step="1" value="00:00:00" style="padding:4px 8px; background:white;">
+                    <button type="button" class="btn btn-outline" style="padding:4px 7px; font-size:0.75rem;" onclick="document.getElementById('newTaskTimerDuration').value='00:00:00'">✖</button>
                 </div>
             </div>
             <div class="kids-Checkboxes">
@@ -1090,13 +1113,13 @@
             </div>
             <button type="button" class="btn btn-success" onclick="addTaskFromAdmin()">➕ Dodaj zadanie do planu</button>
 
-            <h3 style="margin: 22px 0 10px 0; font-size:1.05rem;">Aktualne zadania na tablicy:</h3>
+            <h3 style="margin: 22px 0 10px 0; font-size:1.05rem;">Aktualne zadania (kliknij nagłówek sekcji, aby rozwinąć / zwinąć):</h3>
             <div id="adminTasksList"></div>
         </div>
 
         <!-- 3. NAGRODY DLA DZIECI -->
         <div class="admin-section">
-            <h2>🎁 3. Nagrody dla dzieci</h2>
+            <h2>🎁 3. Nagrody dla dzieci (wyświetlane na dole tablicy)</h2>
             <div class="emoji-grid" id="rewardEmojiPicker"></div>
             <div class="form-row">
                 <input type="text" id="newRewardText" class="input-text" style="flex:1;" placeholder="Wpisz nagrodę (np. 30 minut bajki)">
@@ -1124,7 +1147,7 @@
 
         <!-- 5. SCHEMATY NAGRÓD -->
         <div class="admin-section">
-            <h2>🏆 5. Domyślne schematy nagród</h2>
+            <h2>🏆 5. Domyślne schematy nagród (Szablony nagród)</h2>
             <div class="form-row">
                 <input type="text" id="newRewardPresetName" class="input-text" style="flex:1;" placeholder="Nazwa schematu nagród">
                 <button type="button" class="btn btn-primary" onclick="saveCurrentRewardsAsPreset()">💾 Zapisz obecne nagrody jako schemat</button>
@@ -1238,8 +1261,9 @@
                 <button type="button" class="btn btn-outline" style="padding:4px 7px; font-size:0.75rem;" onclick="document.getElementById('editTaskDueTime').value=''">✖</button>
             </div>
             <div style="display:flex; align-items:center; gap:6px; background:#fff0f6; padding:6px 10px; border-radius:10px; border:2px solid #f06595;">
-                <span style="font-weight:800; font-size:0.85rem; color:#c2255c;">⏱️ Timer (min):</span>
-                <input type="number" id="editTaskTimerMinutes" class="input-text" style="width:75px; padding:4px 8px; background:white;" min="0" max="180" value="0">
+                <span style="font-weight:800; font-size:0.85rem; color:#c2255c;">⏱️ Timer (hh:mm:ss):</span>
+                <input type="time" id="editTaskTimerDuration" class="input-text" step="1" value="00:00:00" style="padding:4px 8px; background:white;">
+                <button type="button" class="btn btn-outline" style="padding:4px 7px; font-size:0.75rem;" onclick="document.getElementById('editTaskTimerDuration').value='00:00:00'">✖</button>
             </div>
         </div>
         <div id="editTaskKidsBox" class="kids-Checkboxes"></div>
@@ -1283,7 +1307,7 @@
                 <button type="button" class="emoji-more-btn" onclick="openEmojiLibrary('presetNewTaskIcon')">➕</button>
                 <input type="text" id="presetNewTaskTitle" class="input-text" style="flex:1;" placeholder="Treść zadania">
                 <input type="time" id="presetNewTaskTime" class="input-text" style="width:95px;" title="Godzina">
-                <input type="number" id="presetNewTaskTimer" class="input-text" style="width:65px;" placeholder="Min" min="0" value="0" title="Timer (min)">
+                <input type="time" id="presetNewTaskTimer" class="input-text" step="1" value="00:00:00" style="width:125px;" title="Timer (hh:mm:ss)">
                 <button type="button" class="btn btn-success" onclick="addTaskToEditedPreset()">Dodaj</button>
             </div>
         </div>
@@ -1370,10 +1394,8 @@
     let collapsedAdminSections = {};
     let collapsedKidSections = {};
 
-    // Słownik aktywnych timerów na urządzeniu: klucz "kidId_taskId" -> pozostałe sekundy
     let activeTaskTimers = {};
     let completionModalTimeout = null;
-    let completionTimerInterval = null;
 
     const DEFAULT_STATE = {
         updatedAt: 0,
@@ -1389,12 +1411,12 @@
             { id: 'sec_evening', name: 'Wieczór', icon: '🌙' }
         ],
         tasks: [
-            { id: 't_1', title: 'Pościelić łóżko i przewietrzyć pokój', icon: '🛏️', sectionId: 'sec_morning', dueTime: '07:30', timerMinutes: 0, assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 0, kid_2: 0 }, prevOrderByKid: {}, lateSecondsByKid: {} },
-            { id: 't_2', title: 'Umyć zęby i ubrać się do szkoły', icon: '🪥', sectionId: 'sec_morning', dueTime: '07:50', timerMinutes: 0, assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 1, kid_2: 1 }, prevOrderByKid: {}, lateSecondsByKid: {} },
-            { id: 't_3', title: 'Odrobić pracę domową (3 klasa)', icon: '📚', sectionId: 'sec_afternoon', dueTime: '16:30', timerMinutes: 15, assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 2, kid_2: 2 }, prevOrderByKid: {}, lateSecondsByKid: {} },
-            { id: 't_4', title: 'Nakarmić pupila / Wyprowadzić psa', icon: '🐕', sectionId: 'sec_afternoon', dueTime: '', timerMinutes: 0, assignedKids: ['kid_1'], statusByKid: {}, orderByKid: { kid_1: 3 }, prevOrderByKid: {}, lateSecondsByKid: {} },
-            { id: 't_5', title: 'Poćwiczyć czytanie przez 15 minut', icon: '🎨', sectionId: 'sec_afternoon', dueTime: '', timerMinutes: 15, assignedKids: ['kid_2'], statusByKid: {}, orderByKid: { kid_2: 3 }, prevOrderByKid: {}, lateSecondsByKid: {} },
-            { id: 't_6', title: 'Spakować plecak na jutro', icon: '🎒', sectionId: 'sec_evening', dueTime: '19:30', timerMinutes: 0, assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 4, kid_2: 4 }, prevOrderByKid: {}, lateSecondsByKid: {} }
+            { id: 't_1', title: 'Pościelić łóżko i przewietrzyć pokój', icon: '🛏️', sectionId: 'sec_morning', dueTime: '07:30', timerSeconds: 0, assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 0, kid_2: 0 }, prevOrderByKid: {}, lateSecondsByKid: {} },
+            { id: 't_2', title: 'Umyć zęby i ubrać się do szkoły', icon: '🪥', sectionId: 'sec_morning', dueTime: '07:50', timerSeconds: 0, assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 1, kid_2: 1 }, prevOrderByKid: {}, lateSecondsByKid: {} },
+            { id: 't_3', title: 'Odrobić pracę domową (3 klasa)', icon: '📚', sectionId: 'sec_afternoon', dueTime: '16:30', timerSeconds: 900, assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 2, kid_2: 2 }, prevOrderByKid: {}, lateSecondsByKid: {} },
+            { id: 't_4', title: 'Nakarmić pupila / Wyprowadzić psa', icon: '🐕', sectionId: 'sec_afternoon', dueTime: '', timerSeconds: 0, assignedKids: ['kid_1'], statusByKid: {}, orderByKid: { kid_1: 3 }, prevOrderByKid: {}, lateSecondsByKid: {} },
+            { id: 't_5', title: 'Poćwiczyć czytanie przez 15 minut', icon: '🎨', sectionId: 'sec_afternoon', dueTime: '', timerSeconds: 900, assignedKids: ['kid_2'], statusByKid: {}, orderByKid: { kid_2: 3 }, prevOrderByKid: {}, lateSecondsByKid: {} },
+            { id: 't_6', title: 'Spakować plecak na jutro', icon: '🎒', sectionId: 'sec_evening', dueTime: '19:30', timerSeconds: 0, assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 4, kid_2: 4 }, prevOrderByKid: {}, lateSecondsByKid: {} }
         ],
         rewards: [
             { id: 'r_1', title: '30 minut ulubionej gry lub bajki 🎮', icon: '🎮', assignedKids: ['kid_1', 'kid_2'], statusByKid: {}, orderByKid: { kid_1: 0, kid_2: 0 } },
@@ -1405,10 +1427,10 @@
                 id: 'preset_school',
                 name: '🏫 Dzień Szkolny (Standard)',
                 tasks: [
-                    { id: 'p1', title: 'Pościelić łóżko', icon: '🛏️', sectionId: 'sec_morning', dueTime: '07:30', timerMinutes: 0, assignedKids: ['ALL'] },
-                    { id: 'p2', title: 'Mycie zębów i poranna toaleta', icon: '🪥', sectionId: 'sec_morning', dueTime: '07:50', timerMinutes: 0, assignedKids: ['ALL'] },
-                    { id: 'p3', title: 'Odrobić lekcje', icon: '📚', sectionId: 'sec_afternoon', dueTime: '16:30', timerMinutes: 20, assignedKids: ['ALL'] },
-                    { id: 'p4', title: 'Spakować plecak do szkoły', icon: '🎒', sectionId: 'sec_evening', dueTime: '19:30', timerMinutes: 0, assignedKids: ['ALL'] }
+                    { id: 'p1', title: 'Pościelić łóżko', icon: '🛏️', sectionId: 'sec_morning', dueTime: '07:30', timerSeconds: 0, assignedKids: ['ALL'] },
+                    { id: 'p2', title: 'Mycie zębów i poranna toaleta', icon: '🪥', sectionId: 'sec_morning', dueTime: '07:50', timerSeconds: 0, assignedKids: ['ALL'] },
+                    { id: 'p3', title: 'Odrobić lekcje', icon: '📚', sectionId: 'sec_afternoon', dueTime: '16:30', timerSeconds: 1200, assignedKids: ['ALL'] },
+                    { id: 'p4', title: 'Spakować plecak do szkoły', icon: '🎒', sectionId: 'sec_evening', dueTime: '19:30', timerSeconds: 0, assignedKids: ['ALL'] }
                 ]
             }
         ],
@@ -1423,6 +1445,25 @@
             }
         ]
     };
+
+    function parseHmsToSeconds(hmsStr) {
+        if (!hmsStr || typeof hmsStr !== 'string') return 0;
+        const parts = hmsStr.trim().split(':').map(n => parseInt(n, 10) || 0);
+        if (parts.length === 3) {
+            return parts[0] * 3600 + parts[1] * 60 + parts[2];
+        } else if (parts.length === 2) {
+            return parts[0] * 3600 + parts[1] * 60;
+        }
+        return 0;
+    }
+
+    function formatSecondsToHms(totalSec) {
+        const secNum = Math.max(0, Math.floor(Number(totalSec) || 0));
+        const h = Math.floor(secNum / 3600);
+        const m = Math.floor((secNum % 3600) / 60);
+        const s = secNum % 60;
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
 
     function sanitizeAppData(data) {
         if (!data || typeof data !== 'object') {
@@ -1453,8 +1494,11 @@
             if (!t.icon) t.icon = '📌';
             if (t.sectionId === undefined) t.sectionId = '';
             if (t.dueTime === undefined) t.dueTime = '';
-            if (t.timerMinutes === undefined || isNaN(t.timerMinutes)) t.timerMinutes = 0;
-            else t.timerMinutes = Number(t.timerMinutes);
+            if (t.timerSeconds === undefined || isNaN(t.timerSeconds)) {
+                t.timerSeconds = (t.timerMinutes && !isNaN(t.timerMinutes)) ? Number(t.timerMinutes) * 60 : 0;
+            } else {
+                t.timerSeconds = Number(t.timerSeconds);
+            }
             t.assignedKids = toArray(t.assignedKids, allKidIds);
             if (!t.statusByKid || typeof t.statusByKid !== 'object') t.statusByKid = {};
             if (!t.orderByKid || typeof t.orderByKid !== 'object') t.orderByKid = {};
@@ -1474,7 +1518,11 @@
         data.presets.forEach(p => {
             p.tasks = toArray(p.tasks, []);
             p.tasks.forEach(pt => {
-                if (pt.timerMinutes === undefined || isNaN(pt.timerMinutes)) pt.timerMinutes = 0;
+                if (pt.timerSeconds === undefined || isNaN(pt.timerSeconds)) {
+                    pt.timerSeconds = (pt.timerMinutes && !isNaN(pt.timerMinutes)) ? Number(pt.timerMinutes) * 60 : 0;
+                } else {
+                    pt.timerSeconds = Number(pt.timerSeconds);
+                }
                 pt.assignedKids = toArray(pt.assignedKids, ['ALL']);
             });
         });
@@ -1638,6 +1686,7 @@
                 body: JSON.stringify(payload)
             });
             if (res.ok) updateSyncBadge('online', cloudConfig.refreshToken ? '🔒 Online (Zalogowano)' : '☁️ Online (Zsynchronizowano)');
+            else if (res.status === 401 || res.status === 403) updateSyncBadge('error', '🔒 Brak autoryzacji bazy (Zaloguj się)');
             else updateSyncBadge('error', '⚠️ Błąd zapisu chmury');
         } catch (err) {
             updateSyncBadge('error', '⚠️ Brak połączenia z chmurą');
@@ -1649,7 +1698,14 @@
         if (!endpoint) return;
         try {
             const res = await fetch(endpoint);
-            if (!res.ok) return;
+            if (res.status === 401 || res.status === 403) {
+                updateSyncBadge('error', '🔒 Wymagane logowanie do bazy');
+                return;
+            }
+            if (!res.ok) {
+                updateSyncBadge('error', '⚠️ Błąd bazy danych');
+                return;
+            }
             const remoteData = await res.json();
             isInitialCloudSyncDone = true;
             if (!remoteData) {
@@ -1702,12 +1758,23 @@
                 await signInWithFirebaseEmail(apiKey, email, password);
                 document.getElementById('cloudPasswordInput').value = '';
             } catch (err) {
-                alert('❌ Błąd logowania: ' + err.message);
+                alert('❌ Błąd logowania do Firebase: ' + err.message);
+                document.getElementById('cloudHelpText').innerHTML = '❌ Błąd logowania: ' + err.message;
                 return;
             }
         } else {
             localStorage.setItem('rodzinnyPlan_cloudCfg', JSON.stringify(cloudConfig));
         }
+
+        let shareUrl = `${window.location.origin}${window.location.pathname}?db=${encodeURIComponent(dbUrl)}&room=${encodeURIComponent(roomId)}`;
+        if (cloudConfig.apiKey && cloudConfig.refreshToken) {
+            shareUrl += `&apiKey=${encodeURIComponent(cloudConfig.apiKey)}&rt=${encodeURIComponent(cloudConfig.refreshToken)}`;
+        }
+
+        document.getElementById('cloudHelpText').innerHTML = `
+            ✅ Połączono! Skopiuj ten link dla innych urządzeń (zawiera bezpieczny token sesji i konfigurację bazy):<br>
+            <input type="text" class="input-text" style="width:100%; margin-top:6px; font-size:0.8rem;" value="${shareUrl}" onclick="this.select()" readonly>
+        `;
         await pullFromCloud(true);
     }
 
@@ -1716,6 +1783,7 @@
         cloudConfig.refreshToken = '';
         cloudConfig.tokenExpiresAt = 0;
         localStorage.setItem('rodzinnyPlan_cloudCfg', JSON.stringify(cloudConfig));
+        document.getElementById('cloudHelpText').innerHTML = '🚪 Wylogowano sesję Firebase z tego urządzenia.';
         updateSyncBadge('', '☁️ Wylogowano');
     }
 
@@ -1807,9 +1875,9 @@
             if (lateSec > 0) {
                 const color = getLateHexColor(lateSec);
                 const textColor = lateSec > 9 * 60 ? '#ffffff' : '#2d3436';
-                return { text: `⚠️ ${dueTimeStr} (+${formatLateDuration(lateSec)})`, stateClass: 'completed', customColor: color, textColor: textColor };
+                return { text: `⚠️ ${dueTimeStr} (Spóźnienie: +${formatLateDuration(lateSec)})`, stateClass: 'completed', customColor: color, textColor: textColor };
             }
-            return { text: `✅ ${dueTimeStr} (O czasie)`, stateClass: 'completed', customColor: null };
+            return { text: `✅ ${dueTimeStr} (Wykonane o czasie)`, stateClass: 'completed', customColor: null };
         }
         const parts = dueTimeStr.split(':');
         if (parts.length < 2) return null;
@@ -1823,17 +1891,44 @@
 
         if (diffSec <= 0) {
             const overMin = Math.floor(Math.abs(diffSec) / 60);
-            return { text: `⏰ Do ${dueTimeStr} (Po czasie!)`, stateClass: 'overdue', customColor: null };
+            const overH = Math.floor(overMin / 60);
+            const remM = overMin % 60;
+            const overStr = overH > 0 ? `${overH}h ${remM}m temu` : `${remM}m temu`;
+            return { text: `⏰ Do ${dueTimeStr} (Po czasie: ${overStr})`, stateClass: 'overdue', customColor: null };
         }
 
         const hours = Math.floor(diffSec / 3600);
         const minutes = Math.floor((diffSec % 3600) / 60);
         const seconds = diffSec % 60;
-        let timeFormatted = hours > 0 ? `${hours}h ${minutes}m` : (minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`);
-        return { text: `⏳ Do ${dueTimeStr} (${timeFormatted})`, stateClass: diffSec <= 1800 ? 'soon' : '', customColor: null };
+        let timeFormatted = hours > 0 ? `${hours}h ${minutes}m ${seconds}s` : (minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`);
+        return { text: `⏳ Do ${dueTimeStr} (zostało: ${timeFormatted})`, stateClass: diffSec <= 1800 ? 'soon' : '', customColor: null };
     }
 
-    // ================= OBSŁUGA DŹWIĘKÓW I TIMERÓW ZADAŃ =================
+    function updateAllTaskCountdowns() {
+        document.querySelectorAll('.task-time-badge[data-due-time]').forEach(badge => {
+            const dueTime = badge.getAttribute('data-due-time');
+            const isDone = badge.getAttribute('data-is-done') === 'true';
+            const lateSec = parseInt(badge.getAttribute('data-late-sec') || '0', 10);
+            const info = computeCountdownInfo(dueTime, isDone, lateSec);
+            if (info) {
+                badge.textContent = info.text;
+                badge.className = 'task-time-badge ' + info.stateClass;
+                if (info.customColor) {
+                    badge.style.background = info.customColor;
+                    badge.style.borderColor = info.customColor;
+                    badge.style.color = info.textColor;
+                } else {
+                    badge.style.background = '';
+                    badge.style.borderColor = '';
+                    badge.style.color = '';
+                }
+            }
+        });
+    }
+
+    setInterval(updateAllTaskCountdowns, 1000);
+
+    // ================= OBSŁUGA DŹWIĘKÓW I TIMERÓW ZADAŃ (hh:mm:ss) =================
     function saveCelebrationSoundSetting() {
         const sel = document.getElementById('celebrationSoundSelect');
         if (sel) {
@@ -1851,10 +1946,7 @@
         try {
             const audio = new Audio(url);
             audio.volume = 1.0;
-            audio.play().catch(() => {
-                // Fallback na syntezę dźwięku przeglądarki jeśli przeglądarka zablokuje URL
-                playSound('win');
-            });
+            audio.play().catch(() => { playSound('win'); });
         } catch (e) {
             playSound('win');
         }
@@ -1890,7 +1982,6 @@
         } catch (e) {}
     }
 
-    // Główne odliczanie timerów co 1 sekundę
     setInterval(() => {
         let hasActive = false;
         Object.keys(activeTaskTimers).forEach(key => {
@@ -1898,7 +1989,7 @@
                 activeTaskTimers[key]--;
                 hasActive = true;
                 if (activeTaskTimers[key] === 0) {
-                    const [kidId, taskId] = key.split('_');
+                    const [kidId, taskId] = key.split('__');
                     delete activeTaskTimers[key];
                     onTaskTimerFinished(kidId, taskId);
                 }
@@ -1914,9 +2005,7 @@
             const key = el.getAttribute('data-timer-key');
             const remSec = activeTaskTimers[key];
             if (remSec !== undefined && remSec > 0) {
-                const m = Math.floor(remSec / 60);
-                const s = remSec % 60;
-                el.textContent = `⏱️ Czas: ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                el.textContent = `⏱️ Czas: ${formatSecondsToHms(remSec)}`;
             }
         });
     }
@@ -1925,21 +2014,17 @@
         const task = (appData.tasks || []).find(t => t.id === taskId);
         if (!task) return;
         const isDone = !!(task.statusByKid && task.statusByKid[kidId]);
+        const durationSec = Number(task.timerSeconds) || 0;
 
-        // Jeśli zadanie jest już wykonane lub nie ma skonfigurowanego timera, odznaczamy/zaznaczamy natychmiast
-        if (isDone || !task.timerMinutes || Number(task.timerMinutes) <= 0) {
+        if (isDone || durationSec <= 0) {
             toggleTaskDone(kidId, taskId);
             return;
         }
 
-        const timerKey = `${kidId}_${taskId}`;
-        // Jeśli timer już leci, kliknięcie nic nie robi lub kończy wcześniej? Niech leci do końca, albo kliknięcie odhacza normalnie.
-        if (activeTaskTimers[timerKey] !== undefined) {
-            return; // timer w toku
-        }
+        const timerKey = `${kidId}__${taskId}`;
+        if (activeTaskTimers[timerKey] !== undefined) return;
 
-        // Uruchomienie timera
-        activeTaskTimers[timerKey] = Number(task.timerMinutes) * 60;
+        activeTaskTimers[timerKey] = durationSec;
         renderKidsBoard();
     }
 
@@ -1947,13 +2032,8 @@
         const task = (appData.tasks || []).find(t => t.id === taskId);
         if (!task) return;
 
-        // Odtworzenie wybranego dźwięku celebracji
         playAudioFromUrl(appData.celebrationSoundUrl || DEFAULT_STATE.celebrationSoundUrl);
-
-        // Wyświetlenie komunikatu na 80% widoku przez 20 sekund
         showCompletionModal(task.title);
-
-        // Odhaczenie zadania
         toggleTaskDone(kidId, taskId);
     }
 
@@ -1979,8 +2059,6 @@
         }
 
         if (completionModalTimeout) clearTimeout(completionModalTimeout);
-        if (completionTimerInterval) clearInterval(completionTimerInterval);
-
         completionModalTimeout = setTimeout(() => {
             closeCompletionModalImmediately();
         }, 20000);
@@ -1990,7 +2068,6 @@
         const overlay = document.getElementById('completionModalOverlay');
         if (overlay) overlay.classList.remove('open');
         if (completionModalTimeout) clearTimeout(completionModalTimeout);
-        if (completionTimerInterval) clearInterval(completionTimerInterval);
     }
 
     function getTasksForKid(kidId) {
@@ -2036,7 +2113,7 @@
     function createTaskItemElement(kid, task) {
         const isDone = !!(task.statusByKid && task.statusByKid[kid.id]);
         const lateSec = (task.lateSecondsByKid && Number(task.lateSecondsByKid[kid.id])) || 0;
-        const timerKey = `${kid.id}_${task.id}`;
+        const timerKey = `${kid.id}__${task.id}`;
         const isTimerRunning = activeTaskTimers[timerKey] !== undefined;
 
         const item = document.createElement('div');
@@ -2075,20 +2152,18 @@
 
         if (isTimerRunning) {
             const remSec = activeTaskTimers[timerKey];
-            const m = Math.floor(remSec / 60);
-            const s = remSec % 60;
             const timerBadge = document.createElement('div');
             timerBadge.className = 'task-timer-running';
             timerBadge.setAttribute('data-timer-key', timerKey);
-            timerBadge.textContent = `⏱️ Czas: ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            timerBadge.textContent = `⏱️ Czas: ${formatSecondsToHms(remSec)}`;
             contentBox.appendChild(timerBadge);
-        } else if (task.timerMinutes && Number(task.timerMinutes) > 0 && !isDone) {
+        } else if (task.timerSeconds && Number(task.timerSeconds) > 0 && !isDone) {
             const setBadge = document.createElement('div');
             setBadge.className = 'task-time-badge';
             setBadge.style.background = '#fff0f6';
             setBadge.style.color = '#c2255c';
             setBadge.style.borderColor = '#f06595';
-            setBadge.textContent = `⏱️ Timer: ${task.timerMinutes} min (kliknij, aby zacząć)`;
+            setBadge.textContent = `⏱️ Timer: ${formatSecondsToHms(task.timerSeconds)} (kliknij, aby zacząć)`;
             contentBox.appendChild(setBadge);
         }
 
@@ -2236,8 +2311,8 @@
                             <input type="text" id="kidEmoji_${kid.id}" class="input-text" style="width:52px; text-align:center;" value="${kidSelectedEmoji[kid.id]}">
                             <button type="button" class="emoji-more-btn" onclick="openEmojiLibrary('kidEmoji_${kid.id}')">➕</button>
                             <input type="text" id="kidInput_${kid.id}" class="input-text" style="flex:1; min-width:120px;" placeholder="Wpisz zadanie..." onkeydown="if(event.key==='Enter') addKidOwnTask('${kid.id}')">
-                            <input type="time" id="kidTime_${kid.id}" class="input-text" style="width:100px;" title="Godzina">
-                            <input type="number" id="kidTimer_${kid.id}" class="input-text" style="width:65px;" placeholder="Min" min="0" value="0" title="Timer (min)">
+                            <input type="time" id="kidTime_${kid.id}" class="input-text" style="width:100px;" title="Opcjonalna godzina wykonania">
+                            <input type="time" id="kidTimer_${kid.id}" class="input-text" step="1" value="00:00:00" style="width:120px;" title="Opcjonalny timer (hh:mm:ss)">
                             <button type="button" class="btn btn-success" onclick="addKidOwnTask('${kid.id}')">Dodaj</button>
                         </div>
                     </div>
@@ -2542,7 +2617,7 @@
         const dueTimeEl = document.getElementById(`kidTime_${kidId}`);
         const dueTime = dueTimeEl ? dueTimeEl.value : '';
         const timerEl = document.getElementById(`kidTimer_${kidId}`);
-        const timerMinutes = timerEl ? (parseInt(timerEl.value, 10) || 0) : 0;
+        const timerSeconds = timerEl ? parseHmsToSeconds(timerEl.value) : 0;
         if (!title) return;
 
         const orderByKid = {};
@@ -2554,7 +2629,7 @@
             icon,
             sectionId: '',
             dueTime: dueTime || '',
-            timerMinutes,
+            timerSeconds,
             assignedKids: [kidId],
             statusByKid: {},
             orderByKid,
@@ -2951,7 +3026,7 @@
 
         const sectionId = document.getElementById('newTaskSectionSelect').value || '';
         const dueTime = document.getElementById('newTaskDueTime').value || '';
-        const timerMinutes = parseInt(document.getElementById('newTaskTimerMinutes').value, 10) || 0;
+        const timerSeconds = parseHmsToSeconds(document.getElementById('newTaskTimerDuration').value);
 
         const orderByKid = {};
         checkedKids.forEach(kId => orderByKid[kId] = getTasksForKid(kId).length);
@@ -2962,7 +3037,7 @@
             icon: selectedEmoji,
             sectionId,
             dueTime,
-            timerMinutes,
+            timerSeconds,
             assignedKids: checkedKids,
             statusByKid: {},
             orderByKid,
@@ -2971,7 +3046,7 @@
         });
 
         document.getElementById('newTaskText').value = '';
-        document.getElementById('newTaskTimerMinutes').value = '0';
+        document.getElementById('newTaskTimerDuration').value = '00:00:00';
         saveData();
         renderAdminTasksList();
     }
@@ -3020,7 +3095,9 @@
         }).join('');
 
         const timeBadge = task.dueTime ? `<span class="badge-time">⏰ Godzina: ${task.dueTime}</span>` : '';
-        const timerBadge = task.timerMinutes && Number(task.timerMinutes) > 0 ? `<span class="badge-timer-set">⏱️ Timer: ${task.timerMinutes} min</span>` : '';
+        const timerBadge = task.timerSeconds && Number(task.timerSeconds) > 0
+            ? `<span class="badge-timer-set">⏱️ Timer: ${formatSecondsToHms(task.timerSeconds)}</span>`
+            : '';
 
         const row = document.createElement('div');
         row.className = 'admin-task-row';
@@ -3220,7 +3297,7 @@
         document.getElementById('editTaskTitle').value = task.title;
         document.getElementById('editTaskSectionSelect').value = task.sectionId || '';
         document.getElementById('editTaskDueTime').value = task.dueTime || '';
-        document.getElementById('editTaskTimerMinutes').value = task.timerMinutes || 0;
+        document.getElementById('editTaskTimerDuration').value = formatSecondsToHms(task.timerSeconds || 0);
 
         const box = document.getElementById('editTaskKidsBox');
         box.innerHTML = '';
@@ -3248,7 +3325,7 @@
         task.title = document.getElementById('editTaskTitle').value.trim();
         task.sectionId = document.getElementById('editTaskSectionSelect').value || '';
         task.dueTime = document.getElementById('editTaskDueTime').value || '';
-        task.timerMinutes = parseInt(document.getElementById('editTaskTimerMinutes').value, 10) || 0;
+        task.timerSeconds = parseHmsToSeconds(document.getElementById('editTaskTimerDuration').value);
         task.assignedKids = checkedKids;
         saveData();
         closeEditModal();
@@ -3343,7 +3420,7 @@
                 icon: t.icon,
                 sectionId: t.sectionId || '',
                 dueTime: t.dueTime || '',
-                timerMinutes: t.timerMinutes || 0,
+                timerSeconds: t.timerSeconds || 0,
                 assignedKids: [...(t.assignedKids || [])]
             }))
         });
@@ -3368,7 +3445,7 @@
                 icon: pt.icon,
                 sectionId: pt.sectionId || '',
                 dueTime: pt.dueTime || '',
-                timerMinutes: pt.timerMinutes || 0,
+                timerSeconds: pt.timerSeconds || 0,
                 assignedKids: assigned,
                 statusByKid: {},
                 orderByKid,
@@ -3426,13 +3503,13 @@
             timeIn.onchange = () => updatePresetTaskField(preset.id, idx, 'dueTime', timeIn.value);
 
             const timerIn = document.createElement('input');
-            timerIn.type = 'number';
+            timerIn.type = 'time';
+            timerIn.step = '1';
             timerIn.className = 'input-text';
-            timerIn.style.width = '65px';
-            timerIn.value = pt.timerMinutes || 0;
-            timerIn.min = '0';
-            timerIn.title = 'Timer (min)';
-            timerIn.onchange = () => updatePresetTaskField(preset.id, idx, 'timerMinutes', parseInt(timerIn.value, 10) || 0);
+            timerIn.style.width = '125px';
+            timerIn.value = formatSecondsToHms(pt.timerSeconds || 0);
+            timerIn.title = 'Timer (hh:mm:ss)';
+            timerIn.onchange = () => updatePresetTaskField(preset.id, idx, 'timerSeconds', parseHmsToSeconds(timerIn.value));
 
             const btnUp = document.createElement('button');
             btnUp.type = 'button';
@@ -3499,13 +3576,13 @@
         const icon = document.getElementById('presetNewTaskIcon').value.trim() || '📌';
         const title = document.getElementById('presetNewTaskTitle').value.trim();
         const dueTime = document.getElementById('presetNewTaskTime').value || '';
-        const timerMinutes = parseInt(document.getElementById('presetNewTaskTimer').value, 10) || 0;
+        const timerSeconds = parseHmsToSeconds(document.getElementById('presetNewTaskTimer').value);
         if (!title) return;
         if (!preset.tasks) preset.tasks = [];
-        preset.tasks.push({ id: 'pt_' + Date.now(), icon, title, dueTime, timerMinutes, assignedKids: ['ALL'] });
+        preset.tasks.push({ id: 'pt_' + Date.now(), icon, title, dueTime, timerSeconds, assignedKids: ['ALL'] });
         document.getElementById('presetNewTaskTitle').value = '';
         document.getElementById('presetNewTaskTime').value = '';
-        document.getElementById('presetNewTaskTimer').value = '0';
+        document.getElementById('presetNewTaskTimer').value = '00:00:00';
         saveData();
         renderEditedPresetTasks(preset);
     }
@@ -3740,21 +3817,61 @@
     // ================= INTELIGENTNE PODPOWIADANIE =================
     const BUILTIN_TASK_SUGGESTIONS = [
         { icon: '🛏️', title: 'Pościelić łóżko i przewietrzyć pokój' },
+        { icon: '🛏️', title: 'Pościelić łóżko' },
         { icon: '🪥', title: 'Umyć zęby i ubrać się do szkoły' },
+        { icon: '🪥', title: 'Umyć zęby rano' },
+        { icon: '🪥', title: 'Umyć zęby wieczorem' },
+        { icon: '🧼', title: 'Umyć ręce po powrocie do domu' },
+        { icon: '🚿', title: 'Wziąć prysznic / Wykąpać się' },
+        { icon: '🪮', title: 'Uczesać włosy' },
+        { icon: '🧴', title: 'Posmarować ciało kremem' },
+        { icon: '👕', title: 'Przygotować ubrania na jutro' },
+        { icon: '👕', title: 'Włożyć brudne ubrania do kosza na pranie' },
         { icon: '📚', title: 'Odrobić pracę domową' },
+        { icon: '📚', title: 'Odrobić lekcje z matematyki' },
+        { icon: '📚', title: 'Odrobić lekcje z języka polskiego' },
+        { icon: '🇬🇧', title: 'Powtórzyć słówka z języka angielskiego' },
         { icon: '📖', title: 'Poczytać książkę przez 15 minut' },
+        { icon: '📖', title: 'Poczytać lekturę szkolną' },
         { icon: '🎒', title: 'Spakować plecak na jutro' },
+        { icon: '🍱', title: 'Spakować drugie śniadanie i bidon z wodą' },
         { icon: '🧹', title: 'Posprzątać swój pokój i biurko' },
+        { icon: '🧹', title: 'Odkurzyć swój pokój' },
+        { icon: '🧸', title: 'Poukładać zabawki i klocki na półce' },
         { icon: '🍽️', title: 'Wstawić naczynia do zmywarki' },
+        { icon: '🍽️', title: 'Opróżnić zmywarkę' },
+        { icon: '🍽️', title: 'Nakryć do stołu przed obiadem' },
+        { icon: '🍽️', title: 'Sprzątnąć ze stołu po posiłku' },
         { icon: '🗑️', title: 'Wynieść worek ze śmieciami' },
-        { icon: '🐕', title: 'Nakarmić psa i nalać świeżej wody' }
+        { icon: '🪴', title: 'Podlać kwiatki w pokoju' },
+        { icon: '🐕', title: 'Nakarmić psa i nalać świeżej wody' },
+        { icon: '🐕', title: 'Wyprowadzić psa na spacer' },
+        { icon: '🐱', title: 'Nakarmić kota i wyczyścić kuwetę' },
+        { icon: '🐠', title: 'Nakarmić rybki w akwarium' },
+        { icon: '⚽', title: 'Spakować strój na WF / trening' },
+        { icon: '🎹', title: 'Poćwiczyć grę na instrumencie' },
+        { icon: '💊', title: 'Wziąć witaminy' }
     ];
 
     const BUILTIN_REWARD_SUGGESTIONS = [
         { icon: '🎮', title: '30 minut ulubionej gry lub bajki' },
+        { icon: '🎮', title: '1 godzina grania na konsoli / komputerze' },
+        { icon: '📺', title: 'Obejrzenie odcinka ulubionej bajki' },
         { icon: '🍿', title: 'Wspólny wieczór filmowy z popcornem' },
         { icon: '🍦', title: 'Wyjście na lody lub deser' },
-        { icon: '🚲', title: 'Wspólna wycieczka rowerowa' }
+        { icon: '🍫', title: 'Słodka przekąska po obiedzie' },
+        { icon: '🍕', title: 'Domowa pizza na kolację' },
+        { icon: '🥞', title: 'Naleśniki lub gofry z owocami' },
+        { icon: '🚲', title: 'Wspólna wycieczka rowerowa' },
+        { icon: '🛝', title: 'Wyjście na plac zabaw lub salę zabaw' },
+        { icon: '🏊', title: 'Wyjście na basen / aquapark' },
+        { icon: '🎲', title: 'Wspólna gra w ulubioną grę planszową' },
+        { icon: '🧩', title: 'Układanie klocków LEGO razem z rodzicem' },
+        { icon: '🎟️', title: 'Wyjście do kina na wybrany film' },
+        { icon: '📖', title: 'Dłuższe czytanie przed snem (+15 minut)' },
+        { icon: '🌙', title: 'Pójście spać 30 minut później w weekend' },
+        { icon: '🪙', title: 'Dodatkowe kieszonkowe do skarbonki' },
+        { icon: '🎁', title: 'Mała niespodzianka / naklejki' }
     ];
 
     function normalizePl(str) {
@@ -3783,13 +3900,42 @@
     }
 
     function scoreSuggestionMatch(candidateTitle, queryRaw) {
+        const q = queryRaw.trim().toLowerCase();
         const qNorm = normalizePl(queryRaw);
         if (!qNorm) return 0;
+
+        const t = candidateTitle.toLowerCase();
         const tNorm = normalizePl(candidateTitle);
-        if (tNorm === qNorm) return 0;
+        if (t === q) return 0;
+
         let score = 0;
-        if (tNorm.startsWith(qNorm)) score += 1000;
-        else if (tNorm.includes(qNorm)) score += 400;
+        if (t.startsWith(q)) score += 1000;
+        else if (tNorm.startsWith(qNorm)) score += 900;
+
+        const wordsNorm = tNorm.split(/\s+/);
+        const wordsExact = t.split(/\s+/);
+        if (wordsExact.some(w => w.startsWith(q))) score += 650;
+        else if (wordsNorm.some(w => w.startsWith(qNorm))) score += 600;
+
+        const idxNorm = tNorm.indexOf(qNorm);
+        if (idxNorm !== -1) score += Math.max(300 - idxNorm * 3, 120);
+
+        const queryTokens = qNorm.split(/\s+/).filter(Boolean);
+        if (queryTokens.length > 1) {
+            let matchedTokens = 0;
+            queryTokens.forEach(tok => {
+                if (wordsNorm.some(w => w.startsWith(tok))) {
+                    score += 180;
+                    matchedTokens++;
+                } else if (tNorm.includes(tok)) {
+                    score += 100;
+                    matchedTokens++;
+                }
+            });
+            if (matchedTokens === queryTokens.length) score += 250;
+        }
+
+        if (score > 0) score -= Math.min(candidateTitle.length * 0.4, 40);
         return score;
     }
 
@@ -3800,7 +3946,7 @@
             .map(item => ({ ...item, score: scoreSuggestionMatch(item.title, query) }))
             .filter(item => item.score > 0)
             .sort((a, b) => b.score - a.score)
-            .slice(0, 6);
+            .slice(0, 7);
     }
 
     function attachAutocompleteToInput(inputId, type, onIconSelect) {
@@ -3822,11 +3968,13 @@
         wrapper.appendChild(dropdown);
 
         let currentItems = [];
+        let activeIndex = -1;
 
         const closeDropdown = () => {
             dropdown.classList.remove('open');
             dropdown.innerHTML = '';
             currentItems = [];
+            activeIndex = -1;
         };
 
         const applySuggestion = (item) => {
@@ -3838,6 +3986,7 @@
 
         const renderSuggestions = () => {
             currentItems = getSortedSuggestions(type, inputEl.value);
+            activeIndex = -1;
             if (currentItems.length === 0) {
                 closeDropdown();
                 return;
@@ -3846,7 +3995,13 @@
             currentItems.forEach(item => {
                 const row = document.createElement('div');
                 row.className = 'autocomplete-item';
-                row.innerHTML = `<span class="autocomplete-icon">${item.icon}</span><span>${item.title}</span>`;
+                const iconSpan = document.createElement('span');
+                iconSpan.className = 'autocomplete-icon';
+                iconSpan.textContent = item.icon;
+                const textSpan = document.createElement('span');
+                textSpan.textContent = item.title;
+                row.appendChild(iconSpan);
+                row.appendChild(textSpan);
                 row.addEventListener('mousedown', (e) => { e.preventDefault(); applySuggestion(item); });
                 dropdown.appendChild(row);
             });
@@ -3856,12 +4011,40 @@
         inputEl.addEventListener('input', renderSuggestions);
         inputEl.addEventListener('focus', renderSuggestions);
         inputEl.addEventListener('blur', () => setTimeout(closeDropdown, 150));
+
+        inputEl.addEventListener('keydown', (e) => {
+            if (!dropdown.classList.contains('open') || currentItems.length === 0) return;
+            const rows = dropdown.querySelectorAll('.autocomplete-item');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = (activeIndex + 1) % currentItems.length;
+                rows.forEach((r, i) => r.classList.toggle('active', i === activeIndex));
+                if (rows[activeIndex]) rows[activeIndex].scrollIntoView({ block: 'nearest' });
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = (activeIndex - 1 + currentItems.length) % currentItems.length;
+                rows.forEach((r, i) => r.classList.toggle('active', i === activeIndex));
+                if (rows[activeIndex]) rows[activeIndex].scrollIntoView({ block: 'nearest' });
+            } else if (e.key === 'Enter' && activeIndex >= 0) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                applySuggestion(currentItems[activeIndex]);
+            } else if (e.key === 'Escape') {
+                closeDropdown();
+            }
+        });
     }
 
     function setupAllAutocompletes() {
         attachAutocompleteToInput('newTaskText', 'task', (icon) => {
             selectedEmoji = icon;
             if (!EMOJIS.includes(icon)) EMOJIS.unshift(icon);
+            const picker = document.getElementById('emojiPicker');
+            if (picker) {
+                Array.from(picker.querySelectorAll('.emoji-option')).forEach(el => {
+                    el.classList.toggle('selected', el.textContent === icon);
+                });
+            }
         });
         attachAutocompleteToInput('editTaskTitle', 'task', (icon) => {
             const el = document.getElementById('editTaskIcon');
@@ -3874,9 +4057,19 @@
         attachAutocompleteToInput('newRewardText', 'reward', (icon) => {
             selectedRewardEmoji = icon;
             if (!REWARD_EMOJIS.includes(icon)) REWARD_EMOJIS.unshift(icon);
+            const picker = document.getElementById('rewardEmojiPicker');
+            if (picker) {
+                Array.from(picker.querySelectorAll('.emoji-option')).forEach(el => {
+                    el.classList.toggle('selected', el.textContent === icon);
+                });
+            }
         });
         attachAutocompleteToInput('editRewardTitle', 'reward', (icon) => {
             const el = document.getElementById('editRewardIcon');
+            if (el) el.value = icon;
+        });
+        attachAutocompleteToInput('rewardPresetNewTitle', 'reward', (icon) => {
+            const el = document.getElementById('rewardPresetNewIcon');
             if (el) el.value = icon;
         });
         (appData.kids || []).forEach(kid => {
